@@ -54,7 +54,7 @@ architecture Behavioral of disparity_generator is
 
 signal ctrl_data_run : std_logic;		--control signal for data processing
 
-type CacheArray is array(0 to WIDTH*HEIGHT-1) of std_logic_vector(3 downto 0);
+type CacheArray is array(0 to WIDTH*60-1) of std_logic_vector(3 downto 0);
 signal org_L : CacheArray; --temporary storage for Left image
 signal org_R : CacheArray; --temporary storage for Right image
 
@@ -69,6 +69,8 @@ signal ssd,prev_ssd :std_logic_vector(20 downto 0); --sum of squared difference
 signal data_count,readreg :std_logic_vector(16 downto 0); --data counting for entire pixels of the image
 signal doneFetch: std_logic;
 
+signal cacheManager  :std_logic_vector(1 downto 0);
+
 begin
 dOUT_addr<= data_count;
 left_right_addr<=readreg;
@@ -77,7 +79,10 @@ dOUT<=best_offset;
 caching_process: process (HCLK) begin
     if rising_edge(HCLK) then
     if doneFetch='0' then
-        if unsigned(readreg)<76800 then
+--        if (unsigned(readreg)- unsigned(cacheManager)*WIDTH*60)<WIDTH*60 then
+        if unsigned(readreg)<WIDTH*60 then
+--             org_L(to_integer(unsigned(readreg)-WIDTH*60*unsigned(cacheManager)))<= left_in;
+--             org_R(to_integer(unsigned(readreg)-WIDTH*60*unsigned(cacheManager)))<= right_in;
              org_L(to_integer(unsigned(readreg)))<= left_in;
              org_R(to_integer(unsigned(readreg)))<= right_in;
 --           org_L(unsigned(readreg) downto unsigned(readreg))<= left_in;
@@ -85,18 +90,31 @@ caching_process: process (HCLK) begin
            readreg<=readreg+"1";
 --        end if;
         else
-            readreg <= (others => '0');
             doneFetch <='1';
+            readreg <= (others => '0');
+--            cacheManager <= cacheManager+'1';
         end if;
+--        if unsigned(readreg)=WIDTH*HEIGHT-1 then
+--            readreg <= (others => '0');
+--            cacheManager<=(others => '0');
+--        end if;
         
     else
-            if unsigned(data_count)<7600 then
-                best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
-                data_count<=data_count+"1";
-            else
-                data_count <= (others => '0');
-                doneFetch <='0';
-            end if;  
+--        if (unsigned(data_count)- unsigned(cacheManager)*WIDTH*60)<WIDTH*60  then
+        if unsigned(data_count)<WIDTH*60  then
+            offsetfound<='1';
+--            best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count)-WIDTH*60*unsigned(cacheManager))))+unsigned(org_R(to_integer(unsigned(data_count)-WIDTH*60*unsigned(cacheManager))))/2);
+            best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
+            data_count<=data_count+"1";
+        else
+            data_count <= (others => '0');
+            doneFetch <='0';
+            offsetfound<='0';
+--            cacheManager <= cacheManager+"1";
+        end if; 
+--        if unsigned(data_count)=WIDTH*HEIGHT-1 then
+--            data_count <= (others => '0');
+--        end if; 
         end if;
     end if;
 end process;

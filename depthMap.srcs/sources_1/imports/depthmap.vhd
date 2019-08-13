@@ -351,14 +351,14 @@ begin
 		B => blue
 	);
 
---	Inst_Address_Generator_l: Address_Generator PORT MAP(
---		CLK => clk_vga,
-----      rez_160x120 => rez_160x120,
-----      rez_320x240 => rez_320x240,
---		enable => activeArea,
---      vsync  => vsync,
---		address => rdaddress_l
---	);
+	Inst_Address_Generator: Address_Generator PORT MAP(
+		CLK => clk_vga,
+--      rez_160x120 => rez_160x120,
+--      rez_320x240 => rez_320x240,
+		enable => activeArea,
+      vsync  => vsync,
+		address => rdaddress_disp
+	);
 --Inst_Address_Generator_r: Address_Generator PORT MAP(
 --		CLK => clk_vga,
 ----      rez_160x120 => rez_160x120,
