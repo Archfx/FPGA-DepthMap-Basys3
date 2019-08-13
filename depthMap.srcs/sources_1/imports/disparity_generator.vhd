@@ -72,43 +72,45 @@ signal doneFetch: std_logic;
 signal cacheManager  :std_logic_vector(1 downto 0);
 
 begin
-dOUT_addr<= data_count;
-left_right_addr<=readreg;
+--dOUT_addr<= data_count;
+--left_right_addr<=readreg;
 dOUT<=best_offset;
+
+with cacheManager select 
+    left_right_addr <= readreg when "00",
+                readreg + std_logic_vector(to_unsigned(WIDTH*60, readreg'length)) when "01",
+                readreg + std_logic_vector(to_unsigned(WIDTH*60*2, readreg'length))   when "10",
+                readreg + std_logic_vector(to_unsigned(WIDTH*60*3, readreg'length))   when "11";
+
+with cacheManager select 
+    dOUT_addr <= data_count when "00",
+                data_count + std_logic_vector(to_unsigned(WIDTH*60, data_count'length)) when "01",
+                data_count + std_logic_vector(to_unsigned(WIDTH*60*2, data_count'length))   when "10",
+                data_count + std_logic_vector(to_unsigned(WIDTH*60*3, data_count'length))   when "11";
 
 caching_process: process (HCLK) begin
     if rising_edge(HCLK) then
-    if doneFetch='0' then
-        if (unsigned(readreg)- unsigned(cacheManager)*WIDTH*60)<WIDTH*60 then
-           org_L(to_integer(unsigned(readreg)-WIDTH*60*unsigned(cacheManager)))<= left_in;
-           org_R(to_integer(unsigned(readreg)-WIDTH*60*unsigned(cacheManager)))<= right_in;
-           readreg<=readreg+"1";
-        else
-            doneFetch <='1';
-            if unsigned(readreg)= WIDTH*HEIGHT-1 then
-                readreg <= (others => '0');
+        if doneFetch='0' then
+            if unsigned(readreg)<WIDTH*60 then
+               org_L(to_integer(unsigned(readreg)))<= left_in;
+               org_R(to_integer(unsigned(readreg)))<= right_in;
+               readreg<=readreg+"1";
+            else
+               doneFetch <='1';
+               readreg <= (others => '0');
             end if;
-        end if;   
-        
-    else
-        if (unsigned(data_count)- unsigned(cacheManager)*WIDTH*60)<WIDTH*60  then    
-            offsetfound<='1';
-            best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count)-WIDTH*60*unsigned(cacheManager))))+unsigned(org_R(to_integer(unsigned(data_count)-WIDTH*60*unsigned(cacheManager))))/2);
-            data_count<=data_count+"1";
         else
-            cacheManager <= cacheManager+"1";
-            doneFetch <='0';
-            offsetfound<='0';
-            if unsigned(data_count)= WIDTH*HEIGHT-1 then
+            if unsigned(data_count)<WIDTH*60  then
+                offsetfound<='1';
+                best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
+                data_count<=data_count+"1";
+            else
                 data_count <= (others => '0');
-            end if;
-            
-            
-
-        end if; 
-        end if; 
-        
-
+                doneFetch <='0';
+                offsetfound<='0';
+                cacheManager<=cacheManager+"1";
+            end if; 
+        end if;
     end if;
 end process;
 
