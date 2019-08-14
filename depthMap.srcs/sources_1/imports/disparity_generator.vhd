@@ -1,11 +1,11 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: Aruna Jayasena (aruna.15@cse.mrt.ac.lk)
 -- 
 -- Create Date: 08/12/2019 04:50:30 PM
--- Design Name: 
+-- Design Name: DepthMap 
 -- Module Name: disparity_generator - Behavioral
--- Project Name: 
+-- Project Name: Obstacle aviodance using stereo vision
 -- Target Devices: 
 -- Tool Versions: 
 -- Description: 
@@ -45,8 +45,8 @@ generic (window:positive:=5;
 	dOUT         : out  STD_LOGIC_vector(3 downto 0);
     dOUT_addr    : out  STD_LOGIC_vector(16 downto 0);
     left_right_addr: out  STD_LOGIC_vector(16 downto 0);
-    ctrl_done    : out  STD_LOGIC;
-    offsetfound  : out  STD_LOGIC
+    ctrl_done    : inout  STD_LOGIC;
+    offsetfound  : inout  STD_LOGIC
     		 );
 end disparity_generator;
 
@@ -74,7 +74,7 @@ signal cacheManager  :std_logic_vector(1 downto 0);
 begin
 --dOUT_addr<= data_count;
 --left_right_addr<=readreg;
-dOUT<=best_offset;
+
 
 with cacheManager select 
     left_right_addr <= readreg when "00",
@@ -97,21 +97,98 @@ caching_process: process (HCLK) begin
                readreg<=readreg+"1";
             else
                doneFetch <='1';
-               readreg <= (others => '0');
+               readreg <= (others => '0');  
             end if;
         else
-            if unsigned(data_count)<WIDTH*60  then
-                offsetfound<='1';
-                best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
-                data_count<=data_count+"1";
-            else
-                data_count <= (others => '0');
-                doneFetch <='0';
-                offsetfound<='0';
-                cacheManager<=cacheManager+"1";
-            end if; 
+--            if unsigned(data_count)<WIDTH*60  then
+--                offsetfound<='1';
+--                best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
+--                data_count<=data_count+"1";
+----------------------------------------------------------------------------------------------------------------------------------------------------
+                if ctrl_done = '1' then
+                    data_count <= (others => '0');
+                    row <= (others => '0');
+                    col <= (others => '0');
+                    offset <= std_logic_vector(to_unsigned(4, offset'length));
+                    offsetping <= '0';
+                    compare <= '0';
+                    ctrl_done <= '0';
+                else
+                    if ( offsetping = '0' and compare = '0') then
+                        if offsetfound = '1' then
+--                            if col=WIDTH - 1 then
+--                            end if;
+                            if col=WIDTH - 1 then
+                                col <=(others => '0');
+                                row <= row + "1";
+                            else 
+                               col <= col + "1";
+                            end if; 
+                            
+                            offsetfound <= '0';
+                            best_offset <= (others => '0');
+                            prev_ssd <= (others => '1');
+                            
+                        else
+                            if offset=maxoffset then
+                                offsetfound <= '1';
+                            else
+                                offset <= offset + "1";
+                            end if;
+                            
+                            ssd<=(others => '0');
+                            offsetping <= '1';
+                       end if;
+                   end if;  
+			    end if;
+			    
+			    if data_count=WIDTH*60-1 then
+			         ctrl_done<='1';
+			         data_count <= (others => '0');
+                     doneFetch <='0';
+                     offsetfound<='0';
+                     cacheManager<=cacheManager+"1";
+			    else 
+			        ctrl_done<='0';
+			        if offsetfound= '1' then
+			             data_count <= data_count + "1";
+			        end if;
+			    end if;
+			    
+			    
+			   if offsetfound= '1' then
+			         offset <= std_logic_vector(to_unsigned(4, offset'length));
+			         best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
+			         dOUT <= best_offset;
+--			         best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
+			   end if;
+			   
+			   if offsetping='1' then
+			         ssd <= ssd + std_logic_vector((unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2));--(org_L[(row + x ) * WIDTH + col + y  + 1 ]-org_R[(row + x ) * WIDTH + col + y -offset + 1 ])*(org_L[(row +  x ) * WIDTH + col + y  + 1 ]-org_R[(row +  x ) * WIDTH + col + y - offset + 1 ]);
+			         compare <= '1';
+			   end if;
+			   
+			   if compare = '1' then
+			         if ssd < prev_ssd then
+			             prev_ssd<=ssd;
+                         best_offset<=offset;
+                     end if;
+			         offsetping <= '0';
+	                 compare <= '0';
+			   end if;
+			   
+			   
+			   
+----------------------------------------------------------------------------------------------------------------------------------------------------
+--            else
+--                data_count <= (others => '0');
+--                doneFetch <='0';
+--                offsetfound<='0';
+--                cacheManager<=cacheManager+"1";
+--            end if; 
         end if;
     end if;
 end process;
 
 end Behavioral;
+

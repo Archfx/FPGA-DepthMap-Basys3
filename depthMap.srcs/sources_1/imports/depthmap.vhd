@@ -164,8 +164,8 @@ architecture Behavioral of DepthMap is
 		left_right_addr     :   OUT std_logic_vector(16 downto 0);
 --		right_addr    :   OUT std_logic_vector(16 downto 0);
 		dOUT_addr     :   OUT std_logic_vector(16 downto 0);
-		ctrl_done     :   OUT  std_logic;
-		offsetfound   :     OUT std_logic_vector(0 downto 0)
+		ctrl_done     :   INOUT  std_logic;
+		offsetfound   :     INOUT std_logic_vector(0 downto 0)
 		
 		
 
