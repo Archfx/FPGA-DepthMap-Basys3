@@ -37,7 +37,7 @@ entity disparity_generator is
 generic (window:positive:=5;
          WIDTH:positive:=320;
          HEIGHT:positive:=240;
-         maxoffset:positive:=10); --Maximum extent where to look for the same pixel
+         maxoffset:positive:=15); --Maximum extent where to look for the same pixel
   Port (
     HCLK         : in  STD_LOGIC;
 	left_in      : in  STD_LOGIC_vector(3 downto 0);
@@ -70,6 +70,9 @@ signal data_count,readreg :std_logic_vector(16 downto 0); --data counting for en
 signal doneFetch: std_logic;
 
 signal cacheManager  :std_logic_vector(1 downto 0);
+
+signal x  :std_logic_vector(3 downto 0);
+signal y  :std_logic_vector(3 downto 0);
 
 begin
 --dOUT_addr<= data_count;
@@ -157,43 +160,26 @@ caching_process: process (HCLK) begin
 			    
 			    
 			   if offsetfound= '1' then
+			         dOUT <= best_offset;
 			         offset <= std_logic_vector(to_unsigned(4, offset'length));
 --			         best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
-			         dOUT <= best_offset;
+			         
 --			         best_offset<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
 			   end if;
 			   
 			   if offsetping='1' then
-			         ssd <= ssd + std_logic_vector
-			         (to_unsigned(
-			         (to_integer(unsigned(org_L((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col))  -2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col))  -2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col))  -1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col)) + 0 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col)) + 1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -2 ) * WIDTH + to_integer(unsigned(col)) + 2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -2 ) * WIDTH + to_integer(unsigned(col)) + 2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col))  -2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col))  -1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 0 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col))  -2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col))  -2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col))  -1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col)) + 0 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col)) + 1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  0 ) * WIDTH + to_integer(unsigned(col)) + 2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col))  -2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col))  -2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col))  -1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col)) + 0 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col)) + 1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  1 ) * WIDTH + to_integer(unsigned(col)) + 2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col))  -2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col))  -2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col))  -2 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col))  -1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col)) + 0 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col)) + 1 -to_integer(unsigned(offset))))))
-                    +(to_integer(unsigned(org_L((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 2 ) * WIDTH + to_integer(unsigned(col)) + 2 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col)) + 2   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) +  2 ) * WIDTH + to_integer(unsigned(col)) + 2 -to_integer(unsigned(offset))))))
-			        ,ssd'length));
-                    
-                    compare <= '1';
+			         if x<5 then
+			             if y<5 then
+			                 ssd <= ssd + std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row)) + to_integer(unsigned(x)) ) * WIDTH + to_integer(unsigned(col)) + to_integer(unsigned(y))   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  + to_integer(unsigned(x)) ) * WIDTH + to_integer(unsigned(col)) + to_integer(unsigned(y)) - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))  + to_integer(unsigned(x)) ) * WIDTH + to_integer(unsigned(col))  + to_integer(unsigned(y))   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   + to_integer(unsigned(x))) * WIDTH + to_integer(unsigned(col)) +to_integer(unsigned(y)) -to_integer(unsigned(offset)))))) ,ssd'length));
+                             y <= y+"1";
+                         else
+                            y <= (others => '0');
+                         end if;
+                         x <= x+"1";
+                     else
+                        x <= (others => '0');
+                        compare <= '1';
+                    end if;
 			   end if;
 			   
 			   if compare = '1' then
