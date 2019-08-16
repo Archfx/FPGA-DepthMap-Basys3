@@ -120,12 +120,24 @@ architecture Behavioral of DepthMap is
 		);
 	END COMPONENT;
 
-	component clocking
-	port (
-    CLK_100         : in     std_logic;
+--	component clocking
+--	port (
+--    CLK_100         : in     std_logic;
+--    -- Clock out ports
+--    CLK_50          : out    std_logic;
+--    CLK_25          : out    std_logic);
+--	end component;
+	
+	
+    component clk_wiz_0 
+    port (
+    clk_in1         : in std_logic;
+    --reset           : in std_logic;
+    --locked          : out std_logic;
     -- Clock out ports
-    CLK_50          : out    std_logic;
-    CLK_25          : out    std_logic);
+    CLK50MHZ          : out    std_logic;
+    CLK25MHZ          : out    std_logic;
+    CLK450MHZ       : out    std_logic);
 	end component;
 	
 	COMPONENT vga_pll
@@ -155,7 +167,7 @@ architecture Behavioral of DepthMap is
 --		enable      : IN  std_logic;       
 --      vsync       : in  STD_LOGIC;
 --		address     : OUT std_logic_vector(16 downto 0);
-		
+		HCLK450         : in  STD_LOGIC;
 		HCLK         :    IN  std_logic;
 --		HRESETn       : IN  std_logic;
 		left_in       :   IN std_logic_vector(3 downto 0);
@@ -174,7 +186,7 @@ architecture Behavioral of DepthMap is
 	END COMPONENT;
 
 
-
+   signal clk450     : std_logic;
    signal clk_camera : std_logic;
    signal clk_vga    : std_logic;
    signal wren_l,wren_r       : std_logic_vector(0 downto 0);
@@ -211,15 +223,27 @@ begin
    vga_g <= green(7 downto 4);
    vga_b <= blue(7 downto 4);
    
-   rez_160x120 <= '0';
-   rez_320x240 <= '1';--btnr;
- Inst_ClockDev : clocking
+   rez_160x120 <= '1';
+   rez_320x240 <= '0';--btnr;
+-- Inst_ClockDev : clocking
+--     port map
+--      (-- Clock in ports
+--       CLK_100 => CLK100,
+--       -- Clock out ports
+--       CLK_50 => CLK_camera,
+--       CLK_25 => CLK_vga);
+ 
+ Inst_ClockDev : clk_wiz_0
      port map
       (-- Clock in ports
-       CLK_100 => CLK100,
+       clk_in1 => CLK100,
+       --reset => '0',
+       --locked => '1',
        -- Clock out ports
-       CLK_50 => CLK_camera,
-       CLK_25 => CLK_vga);
+       CLK450MHZ =>CLK450,
+       CLK50MHZ => CLK_camera,
+       CLK25MHZ => CLK_vga);      
+       
 
    vga_vsync <= vsync;
    
@@ -379,6 +403,7 @@ begin
 	
 	Inst_disparity_generator: disparity_generator PORT MAP(
 		HCLK=> clk_camera,--CLK100,
+		HCLK450=>CLK450,
 --		HRESETn       : IN  std_logic;
 		left_in      => rddata_l,
 		right_in     => rddata_r,
