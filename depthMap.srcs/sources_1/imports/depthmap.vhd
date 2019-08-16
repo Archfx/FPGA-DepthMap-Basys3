@@ -151,8 +151,8 @@ architecture Behavioral of DepthMap is
 	COMPONENT Address_Generator
 	PORT(
 		CLK       : IN  std_logic;
---      rez_160x120 : IN std_logic;
---      rez_320x240 : IN std_logic;
+      rez_160x120 : IN std_logic;
+      rez_320x240 : IN std_logic;
 		enable      : IN  std_logic;       
       vsync       : in  STD_LOGIC;
 		address     : OUT std_logic_vector(16 downto 0)
@@ -377,8 +377,8 @@ begin
 
 	Inst_Address_Generator: Address_Generator PORT MAP(
 		CLK => clk_vga,
---      rez_160x120 => rez_160x120,
---      rez_320x240 => rez_320x240,
+      rez_160x120 => rez_160x120,
+      rez_320x240 => rez_320x240,
 		enable => activeArea,
       vsync  => vsync,
 		address => rdaddress_disp
