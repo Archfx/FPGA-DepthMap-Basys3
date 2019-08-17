@@ -10,7 +10,7 @@ entity Address_Generator is
             rez_160x120  : IN std_logic;
             rez_320x240  : IN std_logic;
             vsync        : in  STD_LOGIC;
-				address 		 : out STD_LOGIC_VECTOR (16 downto 0));	-- adresse généré
+				address 		 : out STD_LOGIC_VECTOR (14 downto 0));	-- adresse généré
 end Address_Generator;
 
 architecture Behavioral of Address_Generator is

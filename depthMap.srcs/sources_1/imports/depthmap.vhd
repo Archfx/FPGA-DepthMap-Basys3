@@ -86,24 +86,24 @@ architecture Behavioral of DepthMap is
   PORT (
       clka : IN STD_LOGIC;
       wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-      addra : IN STD_LOGIC_VECTOR(16 DOWNTO 0);
+      addra : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
       dina : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
       clkb : IN STD_LOGIC;
       enb : IN STD_LOGIC;
-      addrb : IN STD_LOGIC_VECTOR(16 DOWNTO 0);
+      addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
       doutb : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
     );
 	END COMPONENT;
 
 	COMPONENT ov7670_capture
 	PORT(
---      rez_160x120 : IN std_logic;
---      rez_320x240 : IN std_logic;
+      rez_160x120 : IN std_logic;
+      rez_320x240 : IN std_logic;
 		pclk : IN std_logic;
 		vsync : IN std_logic;
 		href : IN std_logic;
 		d : IN std_logic_vector(7 downto 0);          
-		addr : OUT std_logic_vector(16 downto 0);
+		addr : OUT std_logic_vector(14 downto 0);
 		dout : OUT std_logic_vector(11 downto 0);
 		we : OUT std_logic
 		);
@@ -155,7 +155,7 @@ architecture Behavioral of DepthMap is
       rez_320x240 : IN std_logic;
 		enable      : IN  std_logic;       
       vsync       : in  STD_LOGIC;
-		address     : OUT std_logic_vector(16 downto 0)
+		address     : OUT std_logic_vector(14 downto 0)
 		);
 	END COMPONENT;
 	
@@ -173,9 +173,9 @@ architecture Behavioral of DepthMap is
 		left_in       :   IN std_logic_vector(3 downto 0);
 		right_in      :   IN std_logic_vector(3 downto 0);
 		dOUT          :   OUT std_logic_vector(3 downto 0);
-		left_right_addr     :   OUT std_logic_vector(16 downto 0);
+		left_right_addr     :   OUT std_logic_vector(14 downto 0);
 --		right_addr    :   OUT std_logic_vector(16 downto 0);
-		dOUT_addr     :   OUT std_logic_vector(16 downto 0);
+		dOUT_addr     :   OUT std_logic_vector(14 downto 0);
 		ctrl_done     :   INOUT  std_logic;
 		offsetfound   :     INOUT std_logic_vector(0 downto 0)
 		
@@ -195,29 +195,29 @@ architecture Behavioral of DepthMap is
    signal vSync      : std_logic;
    signal nSync      : std_logic;
    
-   signal wraddress_l  : std_logic_vector(16 downto 0);
+   signal wraddress_l  : std_logic_vector(14 downto 0);
    signal wrdata_l     : std_logic_vector(11 downto 0);
-   signal wraddress_r  : std_logic_vector(16 downto 0);
+   signal wraddress_r  : std_logic_vector(14 downto 0);
    signal wrdata_r     : std_logic_vector(11 downto 0);
    
-   signal rdaddress_l  : std_logic_vector(16 downto 0);
+   signal rdaddress_l  : std_logic_vector(14 downto 0);
    signal rddata_l     : std_logic_vector(3 downto 0);
-   signal rdaddress_r  : std_logic_vector(16 downto 0);
+   signal rdaddress_r  : std_logic_vector(14 downto 0);
    signal rddata_r     : std_logic_vector(3 downto 0);
    
    signal disparity_out : std_logic_vector(3 downto 0);
-   signal rdaddress_disp : std_logic_vector(16 downto 0);
+   signal rdaddress_disp : std_logic_vector(14 downto 0);
    signal rddisp           : std_logic_vector(3 downto 0);
-   signal wr_address_disp : std_logic_vector(16 downto 0);
+   signal wr_address_disp : std_logic_vector(14 downto 0);
    signal offsetfound : std_logic_vector(0 downto 0);
-   signal left_right_addr : std_logic_vector(16 downto 0);
+   signal left_right_addr : std_logic_vector(14 downto 0);
    signal red,green,blue : std_logic_vector(7 downto 0);
    signal activeArea : std_logic;
    
    signal rez_160x120 : std_logic;
    signal rez_320x240 : std_logic;
    signal size_select: std_logic_vector(1 downto 0);
-   signal rd_addr_l,wr_addr_l,rd_addr_r,wr_addr_r  : std_logic_vector(16 downto 0);
+   signal rd_addr_l,wr_addr_l,rd_addr_r,wr_addr_r  : std_logic_vector(14 downto 0);
 begin
    vga_r <= red(7 downto 4);
    vga_g <= green(7 downto 4);
@@ -290,22 +290,22 @@ begin
 	
     --with size_select select 
     rd_addr_l <= --rdaddress_l(18 downto 2) when "00",
-        rdaddress_l(16 downto 0);-- when "01",
+        rdaddress_l(14 downto 0);-- when "01",
 --        rdaddress_l(16 downto 0) when "10",
 --        rdaddress_l(16 downto 0) when "11";
 --    with size_select select
     rd_addr_r <= --rdaddress_r(18 downto 2) when "00",
-        rdaddress_r(16 downto 0);-- when "01",
+        rdaddress_r(14 downto 0);-- when "01",
 --        rdaddress_r(16 downto 0) when "10",
 --        rdaddress_r(16 downto 0) when "11";
   -- with size_select select 
     wr_addr_r <= --wraddress_r(18 downto 2) when "00",
-            wraddress_r(16 downto 0);-- when "01",
+            wraddress_r(14 downto 0);-- when "01",
 --            wraddress_r(16 downto 0) when "10",
 --            wraddress_r(16 downto 0) when "11";
    --with size_select select 
     wr_addr_l <= --wraddress_l(18 downto 2) when "00",
-            wraddress_l(16 downto 0);-- when "01",
+            wraddress_l(14 downto 0);-- when "01",
 --            wraddress_l(16 downto 0) when "10",
 --            wraddress_l(16 downto 0) when "11";
             
@@ -344,8 +344,8 @@ begin
 	
 	Inst_ov7670_capture_l: ov7670_capture PORT MAP(
 		pclk  => ov7670_pclk_l,
---      rez_160x120 => rez_160x120,
---      rez_320x240 => rez_320x240,
+      rez_160x120 => rez_160x120,
+      rez_320x240 => rez_320x240,
 		vsync => ov7670_vsync_l,
 		href  => ov7670_href_l,
 		d     => ov7670_data_l,
@@ -356,8 +356,8 @@ begin
 	
 	Inst_ov7670_capture_r: ov7670_capture PORT MAP(
 		pclk  => ov7670_pclk_r,
---      rez_160x120 => rez_160x120,
---      rez_320x240 => rez_320x240,
+      rez_160x120 => rez_160x120,
+      rez_320x240 => rez_320x240,
 		vsync => ov7670_vsync_r,
 		href  => ov7670_href_r,
 		d     => ov7670_data_r,
