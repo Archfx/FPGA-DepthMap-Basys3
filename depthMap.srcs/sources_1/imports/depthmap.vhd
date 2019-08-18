@@ -177,7 +177,7 @@ architecture Behavioral of DepthMap is
 --		right_addr    :   OUT std_logic_vector(16 downto 0);
 		dOUT_addr     :   OUT std_logic_vector(14 downto 0);
 		ctrl_done     :   INOUT  std_logic;
-		offsetfound   :     INOUT std_logic_vector(0 downto 0)
+		wr_en   :     OUT std_logic_vector(0 downto 0)
 		
 		
 
@@ -209,7 +209,7 @@ architecture Behavioral of DepthMap is
    signal rdaddress_disp : std_logic_vector(14 downto 0);
    signal rddisp           : std_logic_vector(3 downto 0);
    signal wr_address_disp : std_logic_vector(14 downto 0);
-   signal offsetfound : std_logic_vector(0 downto 0);
+   signal wr_en : std_logic_vector(0 downto 0);
    signal left_right_addr : std_logic_vector(14 downto 0);
    signal red,green,blue : std_logic_vector(7 downto 0);
    signal activeArea : std_logic;
@@ -336,10 +336,10 @@ begin
 		clkb   => clk_vga,
 		doutb  => rddisp,
 		enb    =>'1',
-		clka   => clk_camera, --CLK100,
+		clka   => clk450, --CLK100,
 		addra => wr_address_disp,
 		dina      => disparity_out,
-		wea      => offsetfound
+		wea      => wr_en
 	);
 	
 	Inst_ov7670_capture_l: ov7670_capture PORT MAP(
@@ -409,7 +409,7 @@ begin
 		right_in     => rddata_r,
 		dOUT         => disparity_out,
 		dOUT_addr => wr_address_disp,
-		offsetfound => offsetfound,
+		wr_en => wr_en,
 		left_right_addr    =>left_right_addr
 		--right_addr   =>,
 --		dOUT_1        :   OUT std_logic_vector(7 downto 0);
