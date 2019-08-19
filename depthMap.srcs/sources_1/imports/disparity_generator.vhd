@@ -55,9 +55,9 @@ end disparity_generator;
 
 architecture Behavioral of disparity_generator is
 
-signal ctrl_data_run : std_logic;		--control signal for data processing
+--signal ctrl_data_run : std_logic;		--control signal for data processing
 
-type CacheArray is array(0 to WIDTH*HEIGHT-1) of std_logic_vector(3 downto 0);
+type CacheArray is array(0 to WIDTH*fetchBlock-1) of std_logic_vector(3 downto 0);
 signal org_L : CacheArray; --temporary storage for Left image
 signal org_R : CacheArray; --temporary storage for Right image
 
@@ -72,10 +72,10 @@ signal ssd,prev_ssd :std_logic_vector(20 downto 0); --sum of squared difference
 signal data_count,readreg :std_logic_vector(14 downto 0); --data counting for entire pixels of the image
 signal doneFetch: std_logic;
 
-signal cacheManager  :std_logic_vector(2 downto 0);
+signal cacheManager  :std_logic_vector(2 downto 0):=(others => '0');
 
 
-signal temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8,temp9  :std_logic_vector(3 downto 0);
+--signal temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8,temp9  :std_logic_vector(3 downto 0);
 
 signal SSD_calc : std_logic;
 
@@ -83,7 +83,7 @@ begin
 --dOUT_addr<= data_count;
 --left_right_addr<=readreg;
 
-wr_en<=offsetfound;
+--wr_en<=offsetfound;
 
 with cacheManager select 
     left_right_addr <= readreg when "000",
@@ -147,8 +147,12 @@ Image_process: process (HCLK450) begin
                         offset <= std_logic_vector(to_unsigned(minoffset,offset'length));  
                     else 
                         if(offset=maxoffset) then
+                            wr_en<='1';
+                            --dOUT<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
+                            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*15/(maxoffset-minoffset),dOUT'length));
                             offsetfound <= '1';
                         else
+                            wr_en<='0';
                             offset<=offset+1;
                         end if;
                         --ssd<=(others => '0');  
@@ -222,14 +226,14 @@ SSD_calc_process: process (HCLK450) begin
 end process;
 
 
-Image_write_process: process (offsetfound) begin
-    if rising_edge(offsetfound) then
-
---        dOUT<=best_offset;--*(255/maxoffset);
-        dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*15/(maxoffset-minoffset),dOUT'length));
---        dOUT<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
-
-    end if;
-end process;
+--Image_write_process: process (offsetfound) begin
+--    if rising_edge(offsetfound) then
+        
+--            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)),dOUT'length));
+----        dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*15/(maxoffset-minoffset),dOUT'length));
+----        dOUT<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
+       
+--    end if;
+--end process;
 
 end Behavioral;
