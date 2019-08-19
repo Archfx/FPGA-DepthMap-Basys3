@@ -121,7 +121,7 @@ Image_process: process (HCLK450) begin
             doneFetch <='1';
         end if;
         if doneFetch='1' then
-            if unsigned(data_count)<WIDTH*fetchBlock then -- replace fetchBlock with height if fetchBlock concept is removed                  
+            if unsigned(row)<fetchBlock then -- replace fetchBlock with height if fetchBlock concept is removed                  
                     if (offsetfound='1') then
                         if(col = WIDTH - 1) then
                             col <= (others => '0');  	
@@ -156,6 +156,7 @@ Image_process: process (HCLK450) begin
                 cacheManager<=cacheManager+"1"; --Comment this if remove fetchBlock concept
                 data_count <= (others => '0');
                 doneFetch <='0';
+                row<=(others => '0');
             end if;
            
         end if;
@@ -187,8 +188,8 @@ SSD_calc_process: process (HCLK450) begin
     end if;
 end process;
 
-Image_write_process: process (HCLK450) begin
-    if rising_edge(offsetfound) or rising_edge(HCLK450) then
+Image_write_process: process (HCLK) begin
+    if rising_edge(offsetfound) or rising_edge(HCLK) then
         if (offsetfound='1') then
             wr_en<='1';
             dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*15/(maxoffset-minoffset),dOUT'length));
