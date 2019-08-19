@@ -59,8 +59,8 @@ type CacheArray is array(0 to WIDTH*fetchBlock-1) of std_logic_vector(3 downto 0
 signal org_L : CacheArray; --temporary storage for Left image
 signal org_R : CacheArray; --temporary storage for Right image
 
-signal row :std_logic_vector(8 downto 0); --row index of the image
-signal col :std_logic_vector(8 downto 0); --column index of the Left image
+signal row,row_fetch :std_logic_vector(8 downto 0); --row index of the image
+signal col,col_fetch :std_logic_vector(8 downto 0); --column index of the Left image
 
 signal offset,best_offset :std_logic_vector(5 downto 0);
 signal offsetping,offsetfound  : std_logic ;
@@ -68,7 +68,7 @@ signal offsetping,offsetfound  : std_logic ;
 signal ssd,prev_ssd :std_logic_vector(20 downto 0); --sum of squared difference
 
 signal data_count,readreg :std_logic_vector(14 downto 0); --data counting for entire pixels of the image
-signal doneFetch: std_logic;
+signal doneFetch: std_logic:='0';
 
 signal cacheManager  :std_logic_vector(2 downto 0);
 
