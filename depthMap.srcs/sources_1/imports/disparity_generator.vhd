@@ -55,8 +55,6 @@ end disparity_generator;
 
 architecture Behavioral of disparity_generator is
 
---signal ctrl_data_run : std_logic;		--control signal for data processing
-
 type CacheArray is array(0 to WIDTH*fetchBlock-1) of std_logic_vector(3 downto 0);
 signal org_L : CacheArray; --temporary storage for Left image
 signal org_R : CacheArray; --temporary storage for Right image
@@ -72,18 +70,12 @@ signal ssd,prev_ssd :std_logic_vector(20 downto 0); --sum of squared difference
 signal data_count,readreg :std_logic_vector(14 downto 0); --data counting for entire pixels of the image
 signal doneFetch: std_logic;
 
-signal cacheManager  :std_logic_vector(2 downto 0):=(others => '0');
-
-
---signal temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8,temp9  :std_logic_vector(3 downto 0);
+signal cacheManager  :std_logic_vector(2 downto 0);
 
 signal SSD_calc : std_logic;
 
 begin
---dOUT_addr<= data_count;
---left_right_addr<=readreg;
 
---wr_en<=offsetfound;
 
 with cacheManager select 
     left_right_addr <= readreg when "000",
@@ -96,14 +88,14 @@ with cacheManager select
                 readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*7, readreg'length))   when "111";
 
 with cacheManager select 
-    dOUT_addr <= data_count when "000",
-                data_count + std_logic_vector(to_unsigned(WIDTH*fetchBlock, data_count'length)) when "001",
-                data_count + std_logic_vector(to_unsigned(WIDTH*fetchBlock*2, data_count'length))   when "010",
-                data_count + std_logic_vector(to_unsigned(WIDTH*fetchBlock*3, data_count'length))   when "011",
-                data_count + std_logic_vector(to_unsigned(WIDTH*fetchBlock*4, data_count'length)) when "100",
-                data_count + std_logic_vector(to_unsigned(WIDTH*fetchBlock*5, data_count'length))   when "101",
-                data_count + std_logic_vector(to_unsigned(WIDTH*fetchBlock*6, data_count'length))   when "110",
-                data_count + std_logic_vector(to_unsigned(WIDTH*fetchBlock*7, data_count'length))   when "111";
+    dOUT_addr <= std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) when "000",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock, dOUT_addr'length)) when "001",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*2, dOUT_addr'length))   when "010",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*3, dOUT_addr'length))   when "011",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*4, dOUT_addr'length)) when "100",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*5, dOUT_addr'length))   when "101",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*6, dOUT_addr'length))   when "110",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*7, dOUT_addr'length))   when "111";
 
 
 
@@ -129,16 +121,13 @@ Image_process: process (HCLK450) begin
             doneFetch <='1';
         end if;
         if doneFetch='1' then
-            if unsigned(data_count)<WIDTH*fetchBlock then -- replace fetchBlock with height if fetchBlock concept is removed
-                   
+            if unsigned(data_count)<WIDTH*fetchBlock then -- replace fetchBlock with height if fetchBlock concept is removed                  
                     if (offsetfound='1') then
                         if(col = WIDTH - 1) then
                             col <= (others => '0');  	
-                            row <= row + 1;
-                            
+                            row <= row + 1;                            
                         else  
-                            col <= col + 1;
-                            
+                            col <= col + 1;                           
                         end if;
                         data_count<=data_count+"1";
                         offsetfound <= '0';
@@ -147,12 +136,8 @@ Image_process: process (HCLK450) begin
                         offset <= std_logic_vector(to_unsigned(minoffset,offset'length));  
                     else 
                         if(offset=maxoffset) then
-                            wr_en<='1';
-                            --dOUT<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
-                            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*15/(maxoffset-minoffset),dOUT'length));
                             offsetfound <= '1';
                         else
-                            wr_en<='0';
                             offset<=offset+1;
                         end if;
                         --ssd<=(others => '0');  
@@ -166,8 +151,7 @@ Image_process: process (HCLK450) begin
                     if SSD_calc='1' then
                         offsetping<='0';
                     end if;     
---                end if;
-                
+--                end if;         
             else
                 cacheManager<=cacheManager+"1"; --Comment this if remove fetchBlock concept
                 data_count <= (others => '0');
@@ -183,28 +167,6 @@ SSD_calc_process: process (HCLK450) begin
     if rising_edge(HCLK450) then
         SSD_calc<='0';
         if (offsetping='1') then
---            temp1<=std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset)))))),temp9'length));
---            temp2<=std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset)))))),temp9'length));
---            temp3<=std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset)))))),temp9'length));
---            temp4<=std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset)))))),temp9'length));
---            temp5<=std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset)))))),temp9'length));
---            temp6<=std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 0 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset)))))),temp9'length));
---            temp7<=std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset)))))),temp9'length));
---            temp8<=std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset)))))),temp9'length));
---            temp9<= std_logic_vector(to_unsigned((to_integer(unsigned(org_L((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row)) + 1 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset)))))),temp9'length)); 
-            
---          ssd <= ssd + std_logic_vector
---                         (to_unsigned(
---                         (to_integer(unsigned(temp1))*(to_integer(unsigned(temp1))))
---                         +(to_integer(unsigned(temp2))*(to_integer(unsigned(temp2))))
---                         +(to_integer(unsigned(temp3))*(to_integer(unsigned(temp3))))
---                         +(to_integer(unsigned(temp4))*(to_integer(unsigned(temp4))))
---                         +(to_integer(unsigned(temp5))*(to_integer(unsigned(temp5))))
---                         +(to_integer(unsigned(temp6))*(to_integer(unsigned(temp6))))
---                         +(to_integer(unsigned(temp7))*(to_integer(unsigned(temp7))))
---                         +(to_integer(unsigned(temp8))*(to_integer(unsigned(temp8))))
---                         +(to_integer(unsigned(temp9))*(to_integer(unsigned(temp9)))),ssd'length));
-                                    
             ssd <= ssd + std_logic_vector
                                  (to_unsigned(
 --                                (to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col))  -1 -to_integer(unsigned(offset))))))
@@ -225,15 +187,19 @@ SSD_calc_process: process (HCLK450) begin
     end if;
 end process;
 
+Image_write_process: process (HCLK450) begin
+    if rising_edge(offsetfound) or rising_edge(HCLK450) then
+        if (offsetfound='1') then
+            wr_en<='1';
+            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*15/(maxoffset-minoffset),dOUT'length));
 
---Image_write_process: process (offsetfound) begin
---    if rising_edge(offsetfound) then
-        
 --            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)),dOUT'length));
-----        dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*15/(maxoffset-minoffset),dOUT'length));
-----        dOUT<=std_logic_vector(unsigned(org_L(to_integer(unsigned(data_count))))+unsigned(org_R(to_integer(unsigned(data_count))))/2);
-       
---    end if;
---end process;
+--        dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*15/(maxoffset-minoffset),dOUT'length));
+--        dOUT<=std_logic_vector(unsigned(org_L((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))))+unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))))/2);
+        else
+            wr_en<='0';
+        end if;
+    end if;
+end process;
 
 end Behavioral;
