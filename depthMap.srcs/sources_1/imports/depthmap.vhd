@@ -95,6 +95,18 @@ architecture Behavioral of DepthMap is
     );
 	END COMPONENT;
 
+COMPONENT disparity_ram
+  PORT (
+    clka : IN STD_LOGIC;
+    wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+    addra : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+    dina : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    clkb : IN STD_LOGIC;
+    addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+    doutb : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+    );
+	END COMPONENT;
+
 	COMPONENT ov7670_capture
 	PORT(
       rez_160x120 : IN std_logic;
@@ -111,7 +123,7 @@ architecture Behavioral of DepthMap is
 
 	COMPONENT RGB
 	PORT(
-		Din : IN std_logic_vector(3 downto 0);
+		Din : IN std_logic_vector(7 downto 0);
 --		Din_r : IN std_logic_vector(3 downto 0);
 		Nblank : IN std_logic;          
 		R : OUT std_logic_vector(7 downto 0);
@@ -172,7 +184,7 @@ architecture Behavioral of DepthMap is
 --		HRESETn       : IN  std_logic;
 		left_in       :   IN std_logic_vector(3 downto 0);
 		right_in      :   IN std_logic_vector(3 downto 0);
-		dOUT          :   OUT std_logic_vector(3 downto 0);
+		dOUT          :   OUT std_logic_vector(7 downto 0);
 		left_right_addr     :   OUT std_logic_vector(14 downto 0);
 --		right_addr    :   OUT std_logic_vector(16 downto 0);
 		dOUT_addr     :   OUT std_logic_vector(14 downto 0);
@@ -205,9 +217,9 @@ architecture Behavioral of DepthMap is
    signal rdaddress_r  : std_logic_vector(14 downto 0);
    signal rddata_r     : std_logic_vector(3 downto 0);
    
-   signal disparity_out : std_logic_vector(3 downto 0);
+   signal disparity_out : std_logic_vector(7 downto 0);
    signal rdaddress_disp : std_logic_vector(14 downto 0);
-   signal rddisp           : std_logic_vector(3 downto 0);
+   signal rddisp           : std_logic_vector(7 downto 0);
    signal wr_address_disp : std_logic_vector(14 downto 0);
    signal wr_en : std_logic_vector(0 downto 0);
    signal left_right_addr : std_logic_vector(14 downto 0);
@@ -331,17 +343,17 @@ begin
 		wea      => wren_r
 	);
 	
-	Inst_disparity_buffer: frame_buffer PORT MAP(
+	Inst_disparity_buffer: disparity_ram PORT MAP(
 		addrb => rdaddress_disp,
 		clkb   => clk_vga,
 		doutb  => rddisp,
-		enb    =>'1',
 		clka   => CLK450,--CLK_camera, --CLK100,
 		addra => wr_address_disp,
 		dina      => disparity_out,
 		wea      => wr_en
 	);
 	
+
 	Inst_ov7670_capture_l: ov7670_capture PORT MAP(
 		pclk  => ov7670_pclk_l,
       rez_160x120 => rez_160x120,

@@ -45,7 +45,7 @@ generic (window:positive:=5;
     HCLK450         : in  STD_LOGIC;
 	left_in      : in  STD_LOGIC_vector(3 downto 0);
 	right_in     : in  STD_LOGIC_vector(3 downto 0);	
-	dOUT         : out  STD_LOGIC_vector(3 downto 0);
+	dOUT         : out  STD_LOGIC_vector(7 downto 0);
     dOUT_addr    : out  STD_LOGIC_vector(14 downto 0);
     left_right_addr: out  STD_LOGIC_vector(14 downto 0);
     ctrl_done    : inout  STD_LOGIC;
