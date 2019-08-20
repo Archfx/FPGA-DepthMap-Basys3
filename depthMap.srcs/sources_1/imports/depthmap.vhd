@@ -336,7 +336,7 @@ begin
 		clkb   => clk_vga,
 		doutb  => rddisp,
 		enb    =>'1',
-		clka   => CLK_camera, --CLK100,
+		clka   => CLK450,--CLK_camera, --CLK100,
 		addra => wr_address_disp,
 		dina      => disparity_out,
 		wea      => wr_en
