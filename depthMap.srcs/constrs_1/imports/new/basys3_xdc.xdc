@@ -7,7 +7,7 @@ set_property PACKAGE_PIN W5 [get_ports clk100]
 	create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk100]
 #	create_clock -period 10 [get_ports clk100]
     #create_clock -name sysclk -waveform {0 5} [get_ports clk100]
-    create_clock -name CLK50MHZ -source [get_ports clk100] -divide_by 2 \ [get_pins CLK50MHZ_clk_wiz_0]
+  #  create_clock -name CLK50MHZ -source [get_ports clk100] -divide_by 2 \ [get_pins CLK50MHZ_clk_wiz_0]
 #_generated
     ##VGA Connector
     set_property PACKAGE_PIN G19 [get_ports {vga_r[0]}]                

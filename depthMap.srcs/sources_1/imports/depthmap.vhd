@@ -86,12 +86,24 @@ architecture Behavioral of DepthMap is
   PORT (
       clka : IN STD_LOGIC;
       wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-      addra : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+      addra : IN STD_LOGIC_VECTOR(16 DOWNTO 0);
       dina : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
       clkb : IN STD_LOGIC;
       enb : IN STD_LOGIC;
-      addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+      addrb : IN STD_LOGIC_VECTOR(16 DOWNTO 0);
       doutb : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+    );
+	END COMPONENT;
+
+COMPONENT disparity_ram
+  PORT (
+    clka : IN STD_LOGIC;
+    wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+    addra : IN STD_LOGIC_VECTOR(16 DOWNTO 0);
+    dina : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    clkb : IN STD_LOGIC;
+    addrb : IN STD_LOGIC_VECTOR(16 DOWNTO 0);
+    doutb : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 	END COMPONENT;
 
@@ -103,7 +115,7 @@ architecture Behavioral of DepthMap is
 		vsync : IN std_logic;
 		href : IN std_logic;
 		d : IN std_logic_vector(7 downto 0);          
-		addr : OUT std_logic_vector(14 downto 0);
+		addr : OUT std_logic_vector(16 downto 0);
 		dout : OUT std_logic_vector(11 downto 0);
 		we : OUT std_logic
 		);
@@ -111,7 +123,7 @@ architecture Behavioral of DepthMap is
 
 	COMPONENT RGB
 	PORT(
-		Din : IN std_logic_vector(3 downto 0);
+		Din : IN std_logic_vector(7 downto 0);
 --		Din_r : IN std_logic_vector(3 downto 0);
 		Nblank : IN std_logic;          
 		R : OUT std_logic_vector(7 downto 0);
@@ -155,7 +167,7 @@ architecture Behavioral of DepthMap is
       rez_320x240 : IN std_logic;
 		enable      : IN  std_logic;       
       vsync       : in  STD_LOGIC;
-		address     : OUT std_logic_vector(14 downto 0)
+		address     : OUT std_logic_vector(16 downto 0)
 		);
 	END COMPONENT;
 	
@@ -172,10 +184,10 @@ architecture Behavioral of DepthMap is
 --		HRESETn       : IN  std_logic;
 		left_in       :   IN std_logic_vector(3 downto 0);
 		right_in      :   IN std_logic_vector(3 downto 0);
-		dOUT          :   OUT std_logic_vector(3 downto 0);
-		left_right_addr     :   OUT std_logic_vector(14 downto 0);
+		dOUT          :   OUT std_logic_vector(7 downto 0);
+		left_right_addr     :   OUT std_logic_vector(16 downto 0);
 --		right_addr    :   OUT std_logic_vector(16 downto 0);
-		dOUT_addr     :   OUT std_logic_vector(14 downto 0);
+		dOUT_addr     :   OUT std_logic_vector(16 downto 0);
 		ctrl_done     :   INOUT  std_logic;
 		wr_en   :     OUT std_logic_vector(0 downto 0)
 		
@@ -195,43 +207,36 @@ architecture Behavioral of DepthMap is
    signal vSync      : std_logic;
    signal nSync      : std_logic;
    
-   signal wraddress_l  : std_logic_vector(14 downto 0);
+   signal wraddress_l  : std_logic_vector(16 downto 0);
    signal wrdata_l     : std_logic_vector(11 downto 0);
-   signal wraddress_r  : std_logic_vector(14 downto 0);
+   signal wraddress_r  : std_logic_vector(16 downto 0);
    signal wrdata_r     : std_logic_vector(11 downto 0);
    
-   signal rdaddress_l  : std_logic_vector(14 downto 0);
+   signal rdaddress_l  : std_logic_vector(16 downto 0);
    signal rddata_l     : std_logic_vector(3 downto 0);
-   signal rdaddress_r  : std_logic_vector(14 downto 0);
+   signal rdaddress_r  : std_logic_vector(16 downto 0);
    signal rddata_r     : std_logic_vector(3 downto 0);
    
-   signal disparity_out : std_logic_vector(3 downto 0);
-   signal rdaddress_disp : std_logic_vector(14 downto 0);
-   signal rddisp           : std_logic_vector(3 downto 0);
-   signal wr_address_disp : std_logic_vector(14 downto 0);
+   signal disparity_out : std_logic_vector(7 downto 0);
+   signal rdaddress_disp : std_logic_vector(16 downto 0);
+   signal rddisp           : std_logic_vector(7 downto 0);
+   signal wr_address_disp : std_logic_vector(16 downto 0);
    signal wr_en : std_logic_vector(0 downto 0);
-   signal left_right_addr : std_logic_vector(14 downto 0);
+   signal left_right_addr : std_logic_vector(16 downto 0);
    signal red,green,blue : std_logic_vector(7 downto 0);
    signal activeArea : std_logic;
    
    signal rez_160x120 : std_logic;
    signal rez_320x240 : std_logic;
    signal size_select: std_logic_vector(1 downto 0);
-   signal rd_addr_l,wr_addr_l,rd_addr_r,wr_addr_r  : std_logic_vector(14 downto 0);
+   signal rd_addr_l,wr_addr_l,rd_addr_r,wr_addr_r  : std_logic_vector(16 downto 0);
 begin
    vga_r <= red(7 downto 4);
    vga_g <= green(7 downto 4);
    vga_b <= blue(7 downto 4);
    
-   rez_160x120 <= '1';
-   rez_320x240 <= '0';--btnr;
--- Inst_ClockDev : clocking
---     port map
---      (-- Clock in ports
---       CLK_100 => CLK100,
---       -- Clock out ports
---       CLK_50 => CLK_camera,
---       CLK_25 => CLK_vga);
+   rez_160x120 <= '0';
+   rez_320x240 <= '1';
  
  Inst_ClockDev : clk_wiz_0
      port map
@@ -286,26 +291,27 @@ begin
 		pwdn            => ov7670_pwdn_r,
 		xclk            => ov7670_xclk_r
 	);
-	--size_select <= btnl&btnr;
+	
+--	size_select <= rez_160x120&rez_320x240;
 	
     --with size_select select 
     rd_addr_l <= --rdaddress_l(18 downto 2) when "00",
-        rdaddress_l(14 downto 0);-- when "01",
+        rdaddress_l(16 downto 0);-- when "01",
 --        rdaddress_l(16 downto 0) when "10",
 --        rdaddress_l(16 downto 0) when "11";
 --    with size_select select
     rd_addr_r <= --rdaddress_r(18 downto 2) when "00",
-        rdaddress_r(14 downto 0);-- when "01",
+        rdaddress_r(16 downto 0);-- when "01",
 --        rdaddress_r(16 downto 0) when "10",
 --        rdaddress_r(16 downto 0) when "11";
   -- with size_select select 
     wr_addr_r <= --wraddress_r(18 downto 2) when "00",
-            wraddress_r(14 downto 0);-- when "01",
+            wraddress_r(16 downto 0);-- when "01",
 --            wraddress_r(16 downto 0) when "10",
 --            wraddress_r(16 downto 0) when "11";
    --with size_select select 
     wr_addr_l <= --wraddress_l(18 downto 2) when "00",
-            wraddress_l(14 downto 0);-- when "01",
+            wraddress_l(16 downto 0);-- when "01",
 --            wraddress_l(16 downto 0) when "10",
 --            wraddress_l(16 downto 0) when "11";
             
@@ -331,21 +337,21 @@ begin
 		wea      => wren_r
 	);
 	
-	Inst_disparity_buffer: frame_buffer PORT MAP(
+	Inst_disparity_buffer: disparity_ram PORT MAP(
 		addrb => rdaddress_disp,
 		clkb   => clk_vga,
 		doutb  => rddisp,
-		enb    =>'1',
 		clka   => CLK450,--CLK_camera, --CLK100,
 		addra => wr_address_disp,
 		dina      => disparity_out,
 		wea      => wr_en
 	);
 	
+
 	Inst_ov7670_capture_l: ov7670_capture PORT MAP(
 		pclk  => ov7670_pclk_l,
-      rez_160x120 => rez_160x120,
-      rez_320x240 => rez_320x240,
+        rez_160x120 => rez_160x120,
+        rez_320x240 => rez_320x240,
 		vsync => ov7670_vsync_l,
 		href  => ov7670_href_l,
 		d     => ov7670_data_l,
@@ -356,8 +362,8 @@ begin
 	
 	Inst_ov7670_capture_r: ov7670_capture PORT MAP(
 		pclk  => ov7670_pclk_r,
-      rez_160x120 => rez_160x120,
-      rez_320x240 => rez_320x240,
+        rez_160x120 => rez_160x120,
+        rez_320x240 => rez_320x240,
 		vsync => ov7670_vsync_r,
 		href  => ov7670_href_r,
 		d     => ov7670_data_r,
@@ -367,7 +373,6 @@ begin
 	); 
 
 	Inst_RGB: RGB PORT MAP(
---		Din_l => rddata_l,
 		Din => rddisp,
 		Nblank => activeArea,
 		R => red,
@@ -377,43 +382,23 @@ begin
 
 	Inst_Address_Generator: Address_Generator PORT MAP(
 		CLK => clk_vga,
-      rez_160x120 => rez_160x120,
-      rez_320x240 => rez_320x240,
+        rez_160x120 => rez_160x120,
+        rez_320x240 => rez_320x240,
 		enable => activeArea,
-      vsync  => vsync,
+        vsync  => vsync,
 		address => rdaddress_disp
 	);
---Inst_Address_Generator_r: Address_Generator PORT MAP(
---		CLK => clk_vga,
-----      rez_160x120 => rez_160x120,
-----      rez_320x240 => rez_320x240,
---		enable => activeArea,
---      vsync  => vsync,
---		address => rdaddress_r
---	);
-	
---	Inst_Address_Generator_disp: Address_Generator PORT MAP(
---		CLK => clk_vga,
-----      rez_160x120 => rez_160x120,
-----      rez_320x240 => rez_320x240,
---		enable => activeArea,
---        vsync  => '0',
---		address => rdaddress_disp
---	);
+
 	
 	Inst_disparity_generator: disparity_generator PORT MAP(
 		HCLK=> clk_camera,--CLK100,
 		HCLK450=>CLK450,
---		HRESETn       : IN  std_logic;
 		left_in      => rddata_l,
 		right_in     => rddata_r,
 		dOUT         => disparity_out,
 		dOUT_addr => wr_address_disp,
 		wr_en => wr_en,
 		left_right_addr    =>left_right_addr
-		--right_addr   =>,
---		dOUT_1        :   OUT std_logic_vector(7 downto 0);
-		--ctrl_done    =>
 	);
 end Behavioral;
 

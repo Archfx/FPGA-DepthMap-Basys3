@@ -45,9 +45,9 @@ generic (window:positive:=5;
     HCLK450         : in  STD_LOGIC;
 	left_in      : in  STD_LOGIC_vector(3 downto 0);
 	right_in     : in  STD_LOGIC_vector(3 downto 0);	
-	dOUT         : out  STD_LOGIC_vector(3 downto 0);
-    dOUT_addr    : out  STD_LOGIC_vector(14 downto 0);
-    left_right_addr: out  STD_LOGIC_vector(14 downto 0);
+	dOUT         : out  STD_LOGIC_vector(7 downto 0);
+    dOUT_addr    : out  STD_LOGIC_vector(16 downto 0);
+    left_right_addr: out  STD_LOGIC_vector(16 downto 0);
     ctrl_done    : inout  STD_LOGIC;
     wr_en  : out  STD_LOGIC
     		 );
@@ -67,7 +67,7 @@ signal offsetping,offsetfound  : std_logic ;
 
 signal ssd,prev_ssd :std_logic_vector(20 downto 0); --sum of squared difference
 
-signal data_count,readreg :std_logic_vector(14 downto 0); --data counting for entire pixels of the image
+signal data_count,readreg :std_logic_vector(16 downto 0); --data counting for entire pixels of the image
 signal doneFetch: std_logic;
 
 --signal cacheManager  :std_logic_vector(2 downto 0);
@@ -202,14 +202,13 @@ SSD_calc_process: process (HCLK450) begin
     end if;
 end process;
 
-Image_write_process: process (HCLK) begin
+Image_write_process: process (offsetfound,HCLK) begin
     if rising_edge(offsetfound) or rising_edge(HCLK) then
         if (offsetfound='1') then
             wr_en<='1';
+            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)),dOUT'length));
 --            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)),dOUT'length));
-
---            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)),dOUT'length));
-        dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*(15/(maxoffset-minoffset)),dOUT'length));
+--            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*(15/(maxoffset-minoffset)),dOUT'length));
 --        dOUT<=std_logic_vector(unsigned(org_L((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))))+unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))))/2);
         else
             wr_en<='0';

@@ -3,11 +3,16 @@
 
 # XDC: imports/new/basys3_xdc.xdc
 
+# IP: ip/disparity_ram/disparity_ram.xci
+set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==disparity_ram || ORIG_REF_NAME==disparity_ram} -quiet] -quiet
+
 # IP: ip/frame_buffer/frame_buffer.xci
 set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==frame_buffer || ORIG_REF_NAME==frame_buffer} -quiet] -quiet
 
 # IP: ip/clk_wiz_0/clk_wiz_0.xci
 set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==clk_wiz_0 || ORIG_REF_NAME==clk_wiz_0} -quiet] -quiet
+
+# XDC: ip/disparity_ram/disparity_ram_ooc.xdc
 
 # XDC: ip/frame_buffer/frame_buffer_ooc.xdc
 
