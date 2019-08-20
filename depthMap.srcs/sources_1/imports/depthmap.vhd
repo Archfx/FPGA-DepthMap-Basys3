@@ -236,14 +236,7 @@ begin
    vga_b <= blue(7 downto 4);
    
    rez_160x120 <= '1';
-   rez_320x240 <= '0';--btnr;
--- Inst_ClockDev : clocking
---     port map
---      (-- Clock in ports
---       CLK_100 => CLK100,
---       -- Clock out ports
---       CLK_50 => CLK_camera,
---       CLK_25 => CLK_vga);
+   rez_320x240 <= '0';
  
  Inst_ClockDev : clk_wiz_0
      port map
@@ -298,7 +291,8 @@ begin
 		pwdn            => ov7670_pwdn_r,
 		xclk            => ov7670_xclk_r
 	);
-	--size_select <= btnl&btnr;
+	
+--	size_select <= rez_160x120&rez_320x240;
 	
     --with size_select select 
     rd_addr_l <= --rdaddress_l(18 downto 2) when "00",
@@ -356,8 +350,8 @@ begin
 
 	Inst_ov7670_capture_l: ov7670_capture PORT MAP(
 		pclk  => ov7670_pclk_l,
-      rez_160x120 => rez_160x120,
-      rez_320x240 => rez_320x240,
+        rez_160x120 => rez_160x120,
+        rez_320x240 => rez_320x240,
 		vsync => ov7670_vsync_l,
 		href  => ov7670_href_l,
 		d     => ov7670_data_l,
@@ -368,8 +362,8 @@ begin
 	
 	Inst_ov7670_capture_r: ov7670_capture PORT MAP(
 		pclk  => ov7670_pclk_r,
-      rez_160x120 => rez_160x120,
-      rez_320x240 => rez_320x240,
+        rez_160x120 => rez_160x120,
+        rez_320x240 => rez_320x240,
 		vsync => ov7670_vsync_r,
 		href  => ov7670_href_r,
 		d     => ov7670_data_r,
@@ -379,7 +373,6 @@ begin
 	); 
 
 	Inst_RGB: RGB PORT MAP(
---		Din_l => rddata_l,
 		Din => rddisp,
 		Nblank => activeArea,
 		R => red,
@@ -389,43 +382,23 @@ begin
 
 	Inst_Address_Generator: Address_Generator PORT MAP(
 		CLK => clk_vga,
-      rez_160x120 => rez_160x120,
-      rez_320x240 => rez_320x240,
+        rez_160x120 => rez_160x120,
+        rez_320x240 => rez_320x240,
 		enable => activeArea,
-      vsync  => vsync,
+        vsync  => vsync,
 		address => rdaddress_disp
 	);
---Inst_Address_Generator_r: Address_Generator PORT MAP(
---		CLK => clk_vga,
-----      rez_160x120 => rez_160x120,
-----      rez_320x240 => rez_320x240,
---		enable => activeArea,
---      vsync  => vsync,
---		address => rdaddress_r
---	);
-	
---	Inst_Address_Generator_disp: Address_Generator PORT MAP(
---		CLK => clk_vga,
-----      rez_160x120 => rez_160x120,
-----      rez_320x240 => rez_320x240,
---		enable => activeArea,
---        vsync  => '0',
---		address => rdaddress_disp
---	);
+
 	
 	Inst_disparity_generator: disparity_generator PORT MAP(
 		HCLK=> clk_camera,--CLK100,
 		HCLK450=>CLK450,
---		HRESETn       : IN  std_logic;
 		left_in      => rddata_l,
 		right_in     => rddata_r,
 		dOUT         => disparity_out,
 		dOUT_addr => wr_address_disp,
 		wr_en => wr_en,
 		left_right_addr    =>left_right_addr
-		--right_addr   =>,
---		dOUT_1        :   OUT std_logic_vector(7 downto 0);
-		--ctrl_done    =>
 	);
 end Behavioral;
 
