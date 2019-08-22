@@ -17,8 +17,8 @@ architecture Behavioral of RGB is
 
 begin
 
-		R <= (Din) when Nblank='1' and 139<(unsigned(Din)) else "00000000";
-		G <= (Din)  when Nblank='1' and 59<(unsigned(Din)) and 230>(unsigned(Din)) else "00000000";
+		R <= (Din) when Nblank='1' and 119<(unsigned(Din)) else "00000000";
+		G <= (Din)  when Nblank='1' and 59<(unsigned(Din)) and 159>(unsigned(Din)) else "00000000";
 		B <= (Din)  when Nblank='1' and 90>(unsigned(Din)) else "00000000";
 
 end Behavioral;

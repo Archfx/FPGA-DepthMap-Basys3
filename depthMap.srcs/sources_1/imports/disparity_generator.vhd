@@ -62,7 +62,7 @@ signal org_R : CacheArray; --temporary storage for Right image
 signal row,row_fetch :std_logic_vector(8 downto 0); --row index of the image
 signal col,col_fetch :std_logic_vector(8 downto 0); --column index of the Left image
 
-signal offset,best_offset :std_logic_vector(5 downto 0);
+signal offset,best_offset :std_logic_vector(7 downto 0);
 signal offsetping,offsetfound  : std_logic ;
 
 signal ssd,prev_ssd :std_logic_vector(20 downto 0); --sum of squared difference
