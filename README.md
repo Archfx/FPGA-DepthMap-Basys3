@@ -8,17 +8,15 @@
 
 Most of the image processing projects in academia has been done on higher-end FPGA's with a considerable amount of resources. The main objective of this project is to implement a reliable embedded system on a lower end FPGA with limited resources. This project is based on Disparity calculation based on SAD (Sum of Absolute Difference) algorithm and creating a depth map.
 
+<img width="300" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/basys3.png" align="right">
+<img width="200" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/ov7670.jpg" align="right">
+
 Hardware used for this project
 
  - Basys 3 FPGA board
-		<p align="right">
-  <img width="300" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/basys3.png" align="right">
-</p>
-
  - 2x OV7670 image sensor modules
-		<p >
-  <img width="200" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/ov7670.jpg" align="right">
-</p>
+  
+
 This project has 3 major sections
 
  1. [Functional verification of disparity generator based on Verilog](https://github.com/Archfx/FPGA_depthMap)
