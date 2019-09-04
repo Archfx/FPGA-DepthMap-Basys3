@@ -119,6 +119,7 @@ OV7670 dual camera mount was designed using a cad tool and 3D printed to mount t
      <em>Hardware connected together</em>
      </p>
 </p>
+
 ## Real-time depth map generation on FPGA
 
 When converting the functional verification module into synthesizable code due to limited functionalities in Verilog, VHDL was selected as the developing language.
