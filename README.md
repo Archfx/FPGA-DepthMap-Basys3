@@ -48,7 +48,9 @@ Based on the Python implementation Abstract flow chart is generated as follows.
 
 <p align="center">
   <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/FlowChart.png">
+  <p align="center">
   <em>Disparity generation Flow chart</em>
+  </p>
 </p>
 
 Then this algorithm is directly ported to Verilog. The implementation was done using ISE design suite by Xilinx. The image files were converted to hex and imported to the simulation and the output is directly saved as a Bitmap image.
@@ -56,12 +58,16 @@ Then this algorithm is directly ported to Verilog. The implementation was done u
 
 <p align="center">
   <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/VerilogSimulationTime.png">
+  <p align="center">
   <em>Timing diagrams at 50MHz</em>
+  </p>
 </p>
 
 <p align="center">
   <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/output.png">
+  <p align="center">
    <em>Simulation Output</em>
+   </p>
 </p>
 
 *** these modules are only for simulation purposes, Do not synthesize the code.
@@ -88,12 +94,16 @@ Following are recorded output from the monitor using a camera.
 
 <p align="center">
   <img width="460" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/Bottle.gif">
+     <p align="center">
      <em>Demo -1</em>
+     </p>
 </p>
 
 <p align="center">
   <img width="460" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/hand.gif">
+  <p align="center">
   <em>Demo -2</em>
+  </p>
 </p>
 
 In both the demonstrations you may observe that camera exposure changes with the environement changes. Improvements are needed to fix this. It will reduce the noise in the output.
