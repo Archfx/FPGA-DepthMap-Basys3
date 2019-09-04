@@ -28,9 +28,11 @@ This project has 3 major sections
 
 
 ## Functional verification
+
 Hardware description languages(HDL) are not meant to be for rapid prototyping. Therefore, in this case, I have used python as the prototyping tool. The SAD algorithm was implemented on python from scratch without using any external library. I refrained from using 2D image arrays to store data because then the HDL implementation is straight forward.
 
 **SAD theory** 
+
 Sum of Absolute difference is based on a simple geometric concept. Where they use the stereo vision to calculate the distance to the objects. For the implementation, two cameras should be on the same plane and they should not have any vertical offsets in their alignments.
 
 **Python implementation**
@@ -95,6 +97,7 @@ Then this algorithm is directly ported to Verilog. The implementation was done u
 
 
 ## Stereo Camera implementation
+
 The cameras that were used for this project is very inexpensive OV7670 modules. They are commonly available and the output can be configured to 8bit parallel.
 These cameras are using I2C interface to communicate with the master. We can configure the camera output by changing the internal registers of the cameras. 
 
