@@ -106,15 +106,15 @@ Connection with BASYS 3
 
 This repo contains VHDL implementation for image read from two cameras and displaying the average of two images from the VGA output.
 
-OV7670 dual camera mount was designed using a cad tool and 3D printed to mount the cameras. STL files for camera mount can be found from here.
+OV7670 dual camera mount was designed using a cad tool and 3D printed to mount the cameras. STL files for camera mount can be found from [here](https://github.com/Archfx/FPGA-stereo-Camera-Basys3/tree/master/CamMountCAD).
 <p align="center">
-  <img width="200" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/cad.png">
+  <img width="230" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/cad.png">
      <p align="center">
      <em>CAD Stereo camera mount</em>
      </p>
 </p>
 <p align="center">
-  <img width="600" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/assembled.jpg">
+  <img width="800" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/assembled.jpg">
      <p align="center">
      <em>Hardware connected together</em>
      </p>
