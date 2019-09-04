@@ -2,7 +2,7 @@
 # DepthMap generation on FPGA
 
 ```diff
-- This project is in Progress
+- This project is still in Progress
 ```
 
 
@@ -11,8 +11,14 @@ Most of the image processing projects in academia has been done on higher-end FP
 Hardware used for this project
 
  - Basys 3 FPGA board
- - 2x OV7670 image sensor modules
+		<p align="center">
+  <img width="300" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/basys3.png">
+</p>
 
+ - 2x OV7670 image sensor modules
+		<p align="center">
+  <img width="300" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/ov7670.jpg">
+</p>
 This project has 3 major sections
 
  1. [Functional verification of disparity generator based on Verilog](https://github.com/Archfx/FPGA_depthMap)
