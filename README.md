@@ -12,12 +12,12 @@ Hardware used for this project
 
  - Basys 3 FPGA board
 		<p align="right">
-  <img width="300" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/basys3.png">
+  <img width="300" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/basys3.png" align="right">
 </p>
 
  - 2x OV7670 image sensor modules
-		<p align="right">
-  <img width="200" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/ov7670.jpg">
+		<p >
+  <img width="200" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/ov7670.jpg" align="right">
 </p>
 This project has 3 major sections
 
