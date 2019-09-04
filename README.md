@@ -103,24 +103,21 @@ These cameras are using I2C interface to communicate with the master. We can con
 <p align="center">
   <img src="https://github.com/Archfx/FPGA-stereo-Camera-Basys3/blob/master/PinOuts/Connector%20pins.jpg">
      <p align="center">
-     <em>CAD Stereo camera mount</em>
+     <em>Pmod connections with Cameras</em>
      </p>
 </p>
 <p align="center">
   <img src="https://github.com/Archfx/FPGA-stereo-Camera-Basys3/blob/master/PinOuts/basys3.png">
      <p align="center">
-     <em>CAD Stereo camera mount</em>
+     <em>Pmod connector pinouts</em>
      </p>
 </p>
 <p align="center">
   <img src="https://github.com/Archfx/FPGA-stereo-Camera-Basys3/blob/master/PinOuts/pMod.png">
      <p align="center">
-     <em>CAD Stereo camera mount</em>
+     <em>Basys3 Pmod pinout diagram</em>
      </p>
 </p>
-Camera PINOUTS
-Connection with BASYS 3
-
 This repo contains VHDL implementation for image read from two cameras and displaying the average of two images from the VGA output.
 
 OV7670 dual camera mount was designed using a cad tool and 3D printed to mount the cameras. STL files for camera mount can be found from [here](https://github.com/Archfx/FPGA-stereo-Camera-Basys3/tree/master/CamMountCAD).
