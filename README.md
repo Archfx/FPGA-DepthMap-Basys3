@@ -34,34 +34,54 @@ Test images used
 For the functional verification, I have used the most famous stereo image pair "Tsukuba" stereo pair
 
 
-![Tsukuba left](https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png)
+<p align="left">
+<p align="center">
 Tsukuba left image
+</p>
+  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png">
+</p>
 
 
-![Tsukuba right](https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png)
-Tsukuba right image   
+<p align="right">
+<p align="center">
+Tsukuba right image
+</p>
+  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png">
+</p>
 
-
-![Colour map generated using python](https://github.com/Archfx/FPGA_depthMap/blob/master/Python_test_implementation/Disparity__colorMap_Tsukuba_5_python.jpg)
-Python results  
-
+<p align="center">
+Python results
+</p>
+<p align="center">
+  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Python_test_implementation/Disparity__colorMap_Tsukuba_5_python.jpg">
+</p>
 
 For this generation, it took more than 4 seconds using an average laptop computer without any accelerating techniques.
 Based on the Python implementation Abstract flow chart is generated as follows.
 
-
-![Disparity generation Flow chart](https://github.com/Archfx/FPGA_depthMap/blob/master/Img/FlowChart.png)
-
+<p align="center">
+Disparity generation Flow chart
+</p>
+<p align="center">
+  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/FlowChart.png">
+</p>
 
 Then this algorithm is directly ported to Verilog. The implementation was done using ISE design suite by Xilinx. The image files were converted to hex and imported to the simulation and the output is directly saved as a Bitmap image.
 
 
-![Verilog timing diagram](https://github.com/Archfx/FPGA_depthMap/blob/master/Img/VerilogSimulationTime.png)
 Timing diagrams at 50MHz
-
-
-![Verilog simulation output](https://github.com/Archfx/FPGA_depthMap/blob/master/output.png)
+<p align="center">
+Timing diagrams at 50MHz
+</p>
+<p align="center">
+  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/VerilogSimulationTime.png">
+</p>
+<p align="center">
 Simulation Output
+</p>
+<p align="center">
+  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/output.png">
+</p>
 
 *** these modules are only for simulation purposes, Do not synthesize the code.
 
