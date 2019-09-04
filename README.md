@@ -35,7 +35,7 @@ For the functional verification, I have used the most famous stereo image pair "
 
 
 
- <img width="320" align="left" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png" text="Right image"><em>Leftimage</em><img width="320" align="right" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png" text="Right image"><em>Right image</em>
+ <img width="320" align="left" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png" text="Left image"><em>Left image and Right Tsukuba images </em><img width="320" align="right" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png" text="Right image">
 
 
 <p align="center">
@@ -47,27 +47,21 @@ For this generation, it took more than 4 seconds using an average laptop compute
 Based on the Python implementation Abstract flow chart is generated as follows.
 
 <p align="center">
-Disparity generation Flow chart
-</p>
-<p align="center">
   <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/FlowChart.png">
+  <em>Disparity generation Flow chart</em>
 </p>
 
 Then this algorithm is directly ported to Verilog. The implementation was done using ISE design suite by Xilinx. The image files were converted to hex and imported to the simulation and the output is directly saved as a Bitmap image.
 
 
-Timing diagrams at 50MHz
-<p align="center">
-Timing diagrams at 50MHz
-</p>
 <p align="center">
   <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/VerilogSimulationTime.png">
+  <em>Timing diagrams at 50MHz</em>
 </p>
-<p align="center">
-Simulation Output
-</p>
+
 <p align="center">
   <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/output.png">
+   <em>Simulation Output</em>
 </p>
 
 *** these modules are only for simulation purposes, Do not synthesize the code.
@@ -91,18 +85,15 @@ When converting the functional verification module into synthesizable code due t
 
 The system outputs the generated disparity map using the VGA output of the FPGA.
 Following are recorded output from the monitor using a camera.
-<p align="center">
-Demo -1
-</p>
+
 <p align="center">
   <img width="460" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/Bottle.gif">
+     <em>Demo -1</em>
 </p>
 
 <p align="center">
-Demo -2
-</p>
-<p align="center">
   <img width="460" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/hand.gif">
+  <em>Demo -2</em>
 </p>
 
 In both the demonstrations you may observe that camera exposure changes with the environement changes. Improvements are needed to fix this. It will reduce the noise in the output.
