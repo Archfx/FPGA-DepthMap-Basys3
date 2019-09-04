@@ -35,12 +35,17 @@ For the functional verification, I have used the most famous stereo image pair "
 
 
 
- <img width="320" align="left" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png" text="Left image"><em>Left image and Right Tsukuba images </em><img width="320" align="right" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png" text="Right image">
+ <img width="320" align="left" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png" text="Left image"><img width="320" align="right" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png" text="Right image">
+ <p align="center">
+ <em>Left image and Right Tsukuba images </em>
+ </p>
 
 
 <p align="center">
   <img src="https://github.com/Archfx/FPGA_depthMap/blob/master/Python_test_implementation/Disparity__colorMap_Tsukuba_5_python.jpg">
+  <p align="center">
 <em>Python results</em>
+</p>
 </p>
 
 For this generation, it took more than 4 seconds using an average laptop computer without any accelerating techniques.
