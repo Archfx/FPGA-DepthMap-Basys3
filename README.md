@@ -142,3 +142,4 @@ Following are recorded output from the monitor using a camera.
 </p>
 
 In both the demonstrations you may observe that camera exposure changes with the environement changes. Improvements are needed to fix this. It will reduce the noise in the output.
+Auto Exposure Corrction(AEC) has been disabled from the cameras by editing the internal register modules. After disableing AEC, the result was much more clear and the noise was removed from the background. 
