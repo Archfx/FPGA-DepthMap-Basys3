@@ -108,6 +108,8 @@ begin
                                   
             when x"36" => sreg <= x"b382";
             when x"37" => sreg <= x"b80a";
+            when x"38" => sreg <= x"138e"; -- COM8 - AGC, White balance
+            when x"39" => sreg <= x"4200"; -- COM8 - AGC, White balance
 --				when x"10" => sreg <= x"703a"; -- SCALING_XSC
 --				when x"11" => sreg <= x"7135"; -- SCALING_YSC
 --				when x"12" => sreg <= x"7200"; -- SCALING_DCWCTR  -- zzz was 11 
