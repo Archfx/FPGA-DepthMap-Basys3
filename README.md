@@ -15,7 +15,11 @@ Hardware used for this project
 
  - Basys 3 FPGA board
  - 2x OV7670 image sensor modules
- 
+ <br/>
+<br/>
+<br/>
+<br/>
+
 This project has 3 major sections
 
  1. [Functional verification of disparity generator based on Verilog](https://github.com/Archfx/FPGA_depthMap)
