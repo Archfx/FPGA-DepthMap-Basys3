@@ -100,7 +100,24 @@ Then this algorithm is directly ported to Verilog. The implementation was done u
 
 The cameras that were used for this project is very inexpensive OV7670 modules. They are commonly available and the output can be configured to 8bit parallel.
 These cameras are using I2C interface to communicate with the master. We can configure the camera output by changing the internal registers of the cameras. 
-
+<p align="center">
+  <img src="https://github.com/Archfx/FPGA-stereo-Camera-Basys3/blob/master/PinOuts/Connector%20pins.jpg">
+     <p align="center">
+     <em>CAD Stereo camera mount</em>
+     </p>
+</p>
+<p align="center">
+  <img src="https://github.com/Archfx/FPGA-stereo-Camera-Basys3/blob/master/PinOuts/basys3.png">
+     <p align="center">
+     <em>CAD Stereo camera mount</em>
+     </p>
+</p>
+<p align="center">
+  <img src="https://github.com/Archfx/FPGA-stereo-Camera-Basys3/blob/master/PinOuts/pMod.png">
+     <p align="center">
+     <em>CAD Stereo camera mount</em>
+     </p>
+</p>
 Camera PINOUTS
 Connection with BASYS 3
 
