@@ -74,13 +74,13 @@ Timing diagrams at 50MHz
 Timing diagrams at 50MHz
 </p>
 <p align="center">
-  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/VerilogSimulationTime.png">
+  <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/VerilogSimulationTime.png">
 </p>
 <p align="center">
 Simulation Output
 </p>
 <p align="center">
-  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/output.png">
+  <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/output.png">
 </p>
 
 *** these modules are only for simulation purposes, Do not synthesize the code.
