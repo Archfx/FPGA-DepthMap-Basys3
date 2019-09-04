@@ -38,7 +38,7 @@ For the functional verification, I have used the most famous stereo image pair "
 <p align="center">
 Tsukuba left image
 </p>
-  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png">
+  <img width="320" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png">
 </p>
 
 
@@ -46,14 +46,14 @@ Tsukuba left image
 <p align="center">
 Tsukuba right image
 </p>
-  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png">
+  <img width="320" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png">
 </p>
 
 <p align="center">
 Python results
 </p>
 <p align="center">
-  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Python_test_implementation/Disparity__colorMap_Tsukuba_5_python.jpg">
+  <img src="https://github.com/Archfx/FPGA_depthMap/blob/master/Python_test_implementation/Disparity__colorMap_Tsukuba_5_python.jpg">
 </p>
 
 For this generation, it took more than 4 seconds using an average laptop computer without any accelerating techniques.
@@ -63,7 +63,7 @@ Based on the Python implementation Abstract flow chart is generated as follows.
 Disparity generation Flow chart
 </p>
 <p align="center">
-  <img width="460" height="300" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/FlowChart.png">
+  <img  src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/FlowChart.png">
 </p>
 
 Then this algorithm is directly ported to Verilog. The implementation was done using ISE design suite by Xilinx. The image files were converted to hex and imported to the simulation and the output is directly saved as a Bitmap image.
