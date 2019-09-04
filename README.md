@@ -11,13 +11,13 @@ Most of the image processing projects in academia has been done on higher-end FP
 Hardware used for this project
 
  - Basys 3 FPGA board
-		<p align="center">
+		<p align="right">
   <img width="300" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/basys3.png">
 </p>
 
  - 2x OV7670 image sensor modules
-		<p align="center">
-  <img width="300" height="200" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/ov7670.jpg">
+		<p align="right">
+  <img width="200" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/ov7670.jpg">
 </p>
 This project has 3 major sections
 
