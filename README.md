@@ -84,14 +84,17 @@ When converting the functional verification module into synthesizable code due t
 
 The system outputs the generated disparity map using the VGA output of the FPGA.
 Following are recorded output from the monitor using a camera.
-
 <p align="center">
 Demo -1
+</p>
+<p align="center">
   <img width="460" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/Bottle.gif">
 </p>
 
 <p align="center">
 Demo -2
+</p>
+<p align="center">
   <img width="460" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/hand.gif">
 </p>
 
