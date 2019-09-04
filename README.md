@@ -85,8 +85,14 @@ When converting the functional verification module into synthesizable code due t
 The system outputs the generated disparity map using the VGA output of the FPGA.
 Following are recorded output from the monitor using a camera.
 
-![Demo-1](https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/Bottle.gif)
+<p align="center">
+Demo -1
+  <img width="460" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/Bottle.gif">
+</p>
 
-![Demo-2](https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/hand.gif)
+<p align="center">
+Demo -2
+  <img width="460" height="300" src="https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/hand.gif">
+</p>
 
 In both the demonstrations you may observe that camera exposure changes with the environement changes. Improvements are needed to fix this. It will reduce the noise in the output.
