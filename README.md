@@ -44,6 +44,14 @@ For the functional verification, I have used the most famous stereo image pair "
  </p>
 
 <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
 <p align="center">
   <img src="https://github.com/Archfx/FPGA_depthMap/blob/master/Python_test_implementation/Disparity__colorMap_Tsukuba_5_python.jpg">
