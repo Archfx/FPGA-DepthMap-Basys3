@@ -4,6 +4,8 @@
 ```diff
 - This project is in Progress
 ```
+
+
 Most of the image processing projects in academia has been done on higher-end FPGA's with a considerable amount of resources. The main objective of this project is to implement a reliable embedded system on a lower end FPGA with limited resources. This project is based on Disparity calculation based on SAD (Sum of Absolute Difference) algorithm and creating a depth map.
 
 Hardware used for this project
@@ -60,6 +62,7 @@ Timing diagrams at 50MHz
 
 ![Verilog simulation output](https://github.com/Archfx/FPGA_depthMap/blob/master/output.png)
 Simulation Output
+
 *** these modules are only for simulation purposes, Do not synthesize the code.
 
 
@@ -78,3 +81,12 @@ OV7670 dual camera mount was designed using a cad tool and 3D printed to mount t
 ## Real-time depth map generation on FPGA
 
 When converting the functional verification module into synthesizable code due to limited functionalities in Verilog, VHDL was selected as the developing language.
+
+The system outputs the generated disparity map using the VGA output of the FPGA.
+Following are recorded output from the monitor using a camera.
+
+![Demo-1](https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/Bottle.gif)
+
+![Demo-2](https://github.com/Archfx/FPGA-DepthMap-Basys3/blob/320x240/IMG/hand.gif)
+
+In both the demonstrations you may observe that camera exposure changes with the environement changes. Improvements are needed to fix this. It will reduce the noise in the output.
