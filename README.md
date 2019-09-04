@@ -33,19 +33,10 @@ The python implementation can be found [here](https://github.com/Archfx/FPGA_dep
 Test images used
 For the functional verification, I have used the most famous stereo image pair "Tsukuba" stereo pair
 
-<p align="center">
-Tsukuba left image
-</p>
-<p align="left">
-  <img width="320" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png">
-</p>
 
-<p align="center">
-Tsukuba right image
-</p>
-<p align="right">
-  <img width="320" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png">
-</p>
+
+ <img width="320" align="left" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_L.png"><img width="320" align="right" src="https://github.com/Archfx/FPGA_depthMap/blob/master/Img/Tsukuba_R.png">
+
 
 <p align="center">
 Python results
