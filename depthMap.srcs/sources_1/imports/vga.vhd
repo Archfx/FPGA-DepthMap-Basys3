@@ -68,12 +68,13 @@ begin
                      activeArea <= '0';
                   end if;
                elsif rez_320x240 = '1' then
-                  if hcnt = 320-1 then
-                     avg_en <= '1';
+                  if hcnt < 320 then
+                     avg_en <= '0';
+                  else
+                    avg_en <= '1';
                   end if;
                   if hcnt = 640-1 then
                      activeArea <= '0';
-                     avg_en <= '0';
                   end if;
                else
                   if hcnt = 640-1 then

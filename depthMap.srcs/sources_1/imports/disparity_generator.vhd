@@ -49,7 +49,7 @@ generic (window:positive:=5;
 	dOUT         : out  STD_LOGIC_vector(7 downto 0);
     dOUT_addr    : out  STD_LOGIC_vector(16 downto 0);
     left_right_addr: out  STD_LOGIC_vector(16 downto 0);
-    ctrl_done    : inout  STD_LOGIC;
+    avg_reg_en    : out  STD_LOGIC;
     wr_en  : out  STD_LOGIC
     		 );
 end disparity_generator;
@@ -127,7 +127,7 @@ with cacheManager select
 --                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*2, dOUT_addr'length))   when "10",
 --                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*3, dOUT_addr'length))   when "11";
                 
-
+avg_reg_en <= not doneFetch;
 
 
 

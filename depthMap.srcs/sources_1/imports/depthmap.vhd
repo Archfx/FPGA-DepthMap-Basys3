@@ -195,7 +195,7 @@ COMPONENT disparity_ram
 		left_right_addr     :   OUT std_logic_vector(16 downto 0);
 --		right_addr    :   OUT std_logic_vector(16 downto 0);
 		dOUT_addr     :   OUT std_logic_vector(16 downto 0);
-		ctrl_done     :   INOUT  std_logic;
+		avg_reg_en     :   OUT  STD_LOGIC_VECTOR(0 DOWNTO 0);
 		wr_en   :     OUT std_logic_vector(0 downto 0)
 		
 		
@@ -208,7 +208,7 @@ COMPONENT disparity_ram
    signal clk450     : std_logic;
    signal clk_camera : std_logic;
    signal clk_vga    : std_logic;
-   signal wren_l,wren_r       : std_logic_vector(0 downto 0);
+   signal wren_l,wren_r,avg_reg_en : std_logic_vector(0 downto 0);
    signal resend     : std_logic;
    signal nBlank     : std_logic;
    signal vSync      : std_logic;
@@ -356,7 +356,7 @@ begin
 		clka   => CLK450,
 		addra => left_right_addr,
 		dina      => avg_out,
-		wea      => wren_r
+		wea      => avg_reg_en
 	);
 	
 	Inst_disparity_buffer: disparity_ram PORT MAP(
@@ -424,6 +424,7 @@ begin
 		dOUT         => disparity_out,
 		dOUT_addr => wr_address_disp,
 		wr_en => wr_en,
+		avg_reg_en => avg_reg_en,
 		left_right_addr    =>left_right_addr
 	);
 end Behavioral;
