@@ -7,6 +7,9 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.numeric_std.all;
+
 
 entity DepthMap is
     Port ( clk100          : in  STD_LOGIC;
@@ -56,7 +59,8 @@ architecture Behavioral of DepthMap is
 		Nblank : OUT std_logic;      
 		clkout : OUT std_logic;
 		activeArea : OUT std_logic;
-		Nsync : OUT std_logic
+		Nsync : OUT std_logic;
+		avg_en : out  STD_LOGIC
 		);
 	END COMPONENT;
 
@@ -124,11 +128,12 @@ COMPONENT disparity_ram
 	COMPONENT RGB
 	PORT(
 		Din : IN std_logic_vector(7 downto 0);
---		Din_r : IN std_logic_vector(3 downto 0);
+		Din_avg : IN std_logic_vector(3 downto 0);
 		Nblank : IN std_logic;          
 		R : OUT std_logic_vector(7 downto 0);
 		G : OUT std_logic_vector(7 downto 0);
-		B : OUT std_logic_vector(7 downto 0)
+		B : OUT std_logic_vector(7 downto 0);
+		avg_en : in	STD_LOGIC
 		);
 	END COMPONENT;
 
@@ -167,6 +172,7 @@ COMPONENT disparity_ram
       rez_320x240 : IN std_logic;
 		enable      : IN  std_logic;       
       vsync       : in  STD_LOGIC;
+      avg_en       : in  STD_LOGIC;
 		address     : OUT std_logic_vector(16 downto 0)
 		);
 	END COMPONENT;
@@ -184,6 +190,7 @@ COMPONENT disparity_ram
 --		HRESETn       : IN  std_logic;
 		left_in       :   IN std_logic_vector(3 downto 0);
 		right_in      :   IN std_logic_vector(3 downto 0);
+		avg_out       :   OUT  STD_LOGIC_vector(3 downto 0);
 		dOUT          :   OUT std_logic_vector(7 downto 0);
 		left_right_addr     :   OUT std_logic_vector(16 downto 0);
 --		right_addr    :   OUT std_logic_vector(16 downto 0);
@@ -216,6 +223,9 @@ COMPONENT disparity_ram
    signal rddata_l     : std_logic_vector(3 downto 0);
    signal rdaddress_r  : std_logic_vector(16 downto 0);
    signal rddata_r     : std_logic_vector(3 downto 0);
+   signal avg_out     : std_logic_vector(3 downto 0);
+   signal din_avg     : std_logic_vector(3 downto 0);
+   signal avg_en : std_logic;
    
    signal disparity_out : std_logic_vector(7 downto 0);
    signal rdaddress_disp : std_logic_vector(16 downto 0);
@@ -261,7 +271,8 @@ begin
 		Vsync      => vsync,
 		Nblank     => nBlank,
 		Nsync      => nsync,
-      activeArea => activeArea
+      activeArea => activeArea,
+      avg_en => avg_en
 	);
 
 	Inst_debounce: debounce PORT MAP(
@@ -337,6 +348,17 @@ begin
 		wea      => wren_r
 	);
 	
+	Inst_frame_buffer_avg: frame_buffer PORT MAP(
+		addrb => rdaddress_disp,
+		clkb   => clk_vga, --CLK100,
+		doutb  => din_avg,
+		enb    =>'1',
+		clka   => CLK450,
+		addra => left_right_addr,
+		dina      => avg_out,
+		wea      => wren_r
+	);
+	
 	Inst_disparity_buffer: disparity_ram PORT MAP(
 		addrb => rdaddress_disp,
 		clkb   => clk_vga,
@@ -374,10 +396,12 @@ begin
 
 	Inst_RGB: RGB PORT MAP(
 		Din => rddisp,
+		Din_avg =>din_avg,
 		Nblank => activeArea,
 		R => red,
 		G => green,
-		B => blue
+		B => blue,
+		avg_en => avg_en
 	);
 
 	Inst_Address_Generator: Address_Generator PORT MAP(
@@ -386,6 +410,7 @@ begin
         rez_320x240 => rez_320x240,
 		enable => activeArea,
         vsync  => vsync,
+        avg_en => avg_en,
 		address => rdaddress_disp
 	);
 
@@ -395,6 +420,7 @@ begin
 		HCLK450=>CLK450,
 		left_in      => rddata_l,
 		right_in     => rddata_r,
+		avg_out     => avg_out,
 		dOUT         => disparity_out,
 		dOUT_addr => wr_address_disp,
 		wr_en => wr_en,

@@ -37,14 +37,15 @@ entity disparity_generator is
 generic (window:positive:=5;
          WIDTH:positive:=320;
          HEIGHT:positive:=240;
-         maxoffset:positive:=60; --Maximum extent where to look for the same pixel
-         minoffset:positive:=1;  ----minimum extent where to look for the same pixel
+         maxoffset:positive:=80; --Maximum extent where to look for the same pixel
+         minoffset:positive:=20;  ----minimum extent where to look for the same pixel
          fetchBlock:positive:=15); 
   Port (
     HCLK         : in  STD_LOGIC;
     HCLK450         : in  STD_LOGIC;
 	left_in      : in  STD_LOGIC_vector(3 downto 0);
-	right_in     : in  STD_LOGIC_vector(3 downto 0);	
+	right_in     : in  STD_LOGIC_vector(3 downto 0);
+	avg_out     : out  STD_LOGIC_vector(3 downto 0);	
 	dOUT         : out  STD_LOGIC_vector(7 downto 0);
     dOUT_addr    : out  STD_LOGIC_vector(16 downto 0);
     left_right_addr: out  STD_LOGIC_vector(16 downto 0);
@@ -137,6 +138,7 @@ caching_process: process (HCLK) begin
             if unsigned(readreg)<WIDTH*fetchBlock then -- replace fetchBlock with height if fetchBlock concept is removed
                org_L(to_integer(unsigned(readreg)))<= left_in;
                org_R(to_integer(unsigned(readreg)))<= right_in;
+               avg_out<=std_logic_vector(unsigned(left_in) + unsigned(right_in)/2);
                readreg<=readreg+"1";
             else
                readreg <= (others => '0');  
@@ -222,9 +224,9 @@ Image_write_process: process (offsetfound,HCLK) begin
     if rising_edge(offsetfound) or rising_edge(HCLK) then
         if (offsetfound='1') then
             wr_en<='1';
-            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)*4),dOUT'length));
+--            dOUT<=std_logic_vector(to_unsigned(to_integer((unsigned(best_offset)-minoffset)*4),dOUT'length));
 --            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)),dOUT'length));
---            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset))*(15/(maxoffset-minoffset)),dOUT'length));
+            dOUT<=std_logic_vector(to_unsigned(to_integer((unsigned(best_offset))-minoffset)*(255/(maxoffset-minoffset)),dOUT'length));
 --        dOUT<=std_logic_vector(unsigned(org_L((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))))+unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))))/2);
         else
             wr_en<='0';

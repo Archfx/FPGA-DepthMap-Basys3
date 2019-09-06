@@ -15,13 +15,15 @@ entity VGA is
            Hsync,Vsync : out  STD_LOGIC;						
 			  Nblank : out  STD_LOGIC;								
            activeArea : out  STD_LOGIC;
-			  Nsync : out  STD_LOGIC);	
+			  Nsync : out  STD_LOGIC;
+			 avg_en : out  STD_LOGIC );	
 end VGA;
 
 architecture Behavioral of VGA is
 signal Hcnt:STD_LOGIC_VECTOR(9 downto 0):="0000000000";		
 signal Vcnt:STD_LOGIC_VECTOR(9 downto 0):="1000001000";		
 signal video:STD_LOGIC;
+
 constant HM: integer :=799;	
 constant HD: integer :=640;	
 constant HF: integer :=16;		
@@ -67,7 +69,11 @@ begin
                   end if;
                elsif rez_320x240 = '1' then
                   if hcnt = 320-1 then
+                     avg_en <= '1';
+                  end if;
+                  if hcnt = 640-1 then
                      activeArea <= '0';
+                     avg_en <= '0';
                   end if;
                else
                   if hcnt = 640-1 then
