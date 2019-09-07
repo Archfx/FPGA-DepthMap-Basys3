@@ -146,15 +146,13 @@ COMPONENT disparity_ram
 --	end component;
 	
 	
-    component clk_wiz_0 
+    component Clocks 
     port (
     clk_in1         : in std_logic;
-    --reset           : in std_logic;
-    --locked          : out std_logic;
     -- Clock out ports
     CLK50MHZ          : out    std_logic;
     CLK25MHZ          : out    std_logic;
-    CLK450MHZ       : out    std_logic);
+    CLK_MAIN       : out    std_logic);
 	end component;
 	
 	COMPONENT vga_pll
@@ -177,6 +175,16 @@ COMPONENT disparity_ram
 		);
 	END COMPONENT;
 	
+	COMPONENT Image_Rectification
+    PORT(
+        address_in 	: in STD_LOGIC_VECTOR (16 downto 0);
+        plus : in  STD_LOGIC;
+        minus : in  STD_LOGIC;
+        CLK : in  STD_LOGIC;
+        address_left 	: out STD_LOGIC_VECTOR (16 downto 0);
+        address_right 	: out STD_LOGIC_VECTOR (16 downto 0));
+	END COMPONENT;
+	
 	COMPONENT disparity_generator
 	PORT(
 --		CLK25       : IN  std_logic;
@@ -185,7 +193,7 @@ COMPONENT disparity_ram
 --		enable      : IN  std_logic;       
 --      vsync       : in  STD_LOGIC;
 --		address     : OUT std_logic_vector(16 downto 0);
-		HCLK450         : in  STD_LOGIC;
+		CLK_MAIN         : in  STD_LOGIC;
 		HCLK         :    IN  std_logic;
 --		HRESETn       : IN  std_logic;
 		left_in       :   IN std_logic_vector(3 downto 0);
@@ -205,7 +213,7 @@ COMPONENT disparity_ram
 	END COMPONENT;
 
 
-   signal clk450     : std_logic;
+   signal CLK_MAIN     : std_logic;
    signal clk_camera : std_logic;
    signal clk_vga    : std_logic;
    signal wren_l,wren_r,avg_reg_en : std_logic_vector(0 downto 0);
@@ -232,7 +240,7 @@ COMPONENT disparity_ram
    signal rddisp           : std_logic_vector(7 downto 0);
    signal wr_address_disp : std_logic_vector(16 downto 0);
    signal wr_en : std_logic_vector(0 downto 0);
-   signal left_right_addr : std_logic_vector(16 downto 0);
+   signal left_right_addr,address_left,address_right : std_logic_vector(16 downto 0);
    signal red,green,blue : std_logic_vector(7 downto 0);
    signal activeArea : std_logic;
    
@@ -248,14 +256,12 @@ begin
    rez_160x120 <= '0';
    rez_320x240 <= '1';
  
- Inst_ClockDev : clk_wiz_0
+ Inst_ClockDev : Clocks
      port map
       (-- Clock in ports
        clk_in1 => CLK100,
-       --reset => '0',
-       --locked => '1',
        -- Clock out ports
-       CLK450MHZ =>CLK450,
+       CLK_MAIN =>CLK_MAIN,
        CLK50MHZ => CLK_camera,
        CLK25MHZ => CLK_vga);      
        
@@ -327,7 +333,7 @@ begin
 --            wraddress_l(16 downto 0) when "11";
             
 	Inst_frame_buffer_l: frame_buffer PORT MAP(
-		addrb => left_right_addr,
+		addrb => address_left,
 		clkb   => clk_camera,--CLK100,
 		doutb  => rddata_l,
 		enb    =>'1',
@@ -338,7 +344,7 @@ begin
 	);
 	
 	Inst_frame_buffer_r: frame_buffer PORT MAP(
-		addrb => left_right_addr,
+		addrb => address_right,
 		clkb   => clk_camera, --CLK100,
 		doutb        => rddata_r,
 		enb    =>'1',
@@ -353,7 +359,7 @@ begin
 		clkb   => clk_vga, --CLK100,
 		doutb  => din_avg,
 		enb    =>'1',
-		clka   => CLK450,
+		clka   => CLK_MAIN,
 		addra => left_right_addr,
 		dina      => avg_out,
 		wea      => avg_reg_en
@@ -363,7 +369,7 @@ begin
 		addrb => rdaddress_disp,
 		clkb   => clk_vga,
 		doutb  => rddisp,
-		clka   => CLK450,--CLK_camera, --CLK100,
+		clka   => CLK_MAIN,--CLK_camera, --CLK100,
 		addra => wr_address_disp,
 		dina      => disparity_out,
 		wea      => wr_en
@@ -413,11 +419,20 @@ begin
         avg_en => avg_en,
 		address => rdaddress_disp
 	);
+	
+	Inst_rectification: Image_Rectification PORT MAP(
+		address_in => left_right_addr,
+		plus => btnr,
+        minus => btnl,
+        CLK => clk_camera,
+		address_left => address_left,
+		address_right => address_right
+	);
 
 	
 	Inst_disparity_generator: disparity_generator PORT MAP(
 		HCLK=> clk_camera,--CLK100,
-		HCLK450=>CLK450,
+		CLK_MAIN=>CLK_MAIN,
 		left_in      => rddata_l,
 		right_in     => rddata_r,
 		avg_out     => avg_out,

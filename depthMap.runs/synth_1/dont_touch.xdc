@@ -9,17 +9,17 @@ set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==disparity_ram |
 # IP: ip/frame_buffer/frame_buffer.xci
 set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==frame_buffer || ORIG_REF_NAME==frame_buffer} -quiet] -quiet
 
-# IP: ip/clk_wiz_0/clk_wiz_0.xci
-set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==clk_wiz_0 || ORIG_REF_NAME==clk_wiz_0} -quiet] -quiet
+# IP: ip/Clocks/Clocks.xci
+set_property DONT_TOUCH TRUE [get_cells -hier -filter {REF_NAME==Clocks || ORIG_REF_NAME==Clocks} -quiet] -quiet
 
 # XDC: ip/disparity_ram/disparity_ram_ooc.xdc
 
 # XDC: ip/frame_buffer/frame_buffer_ooc.xdc
 
-# XDC: ip/clk_wiz_0/clk_wiz_0_board.xdc
-set_property DONT_TOUCH TRUE [get_cells [split [join [get_cells -hier -filter {REF_NAME==clk_wiz_0 || ORIG_REF_NAME==clk_wiz_0} -quiet] {/inst } ]/inst ] -quiet] -quiet
+# XDC: ip/Clocks/Clocks_board.xdc
+set_property DONT_TOUCH TRUE [get_cells [split [join [get_cells -hier -filter {REF_NAME==Clocks || ORIG_REF_NAME==Clocks} -quiet] {/inst } ]/inst ] -quiet] -quiet
 
-# XDC: ip/clk_wiz_0/clk_wiz_0.xdc
-#dup# set_property DONT_TOUCH TRUE [get_cells [split [join [get_cells -hier -filter {REF_NAME==clk_wiz_0 || ORIG_REF_NAME==clk_wiz_0} -quiet] {/inst } ]/inst ] -quiet] -quiet
+# XDC: ip/Clocks/Clocks.xdc
+#dup# set_property DONT_TOUCH TRUE [get_cells [split [join [get_cells -hier -filter {REF_NAME==Clocks || ORIG_REF_NAME==Clocks} -quiet] {/inst } ]/inst ] -quiet] -quiet
 
-# XDC: ip/clk_wiz_0/clk_wiz_0_ooc.xdc
+# XDC: ip/Clocks/Clocks_ooc.xdc

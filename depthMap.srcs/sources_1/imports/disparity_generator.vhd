@@ -42,7 +42,7 @@ generic (window:positive:=5;
          fetchBlock:positive:=15); 
   Port (
     HCLK         : in  STD_LOGIC;
-    HCLK450         : in  STD_LOGIC;
+    CLK_MAIN         : in  STD_LOGIC;
 	left_in      : in  STD_LOGIC_vector(3 downto 0);
 	right_in     : in  STD_LOGIC_vector(3 downto 0);
 	avg_out     : out  STD_LOGIC_vector(3 downto 0);	
@@ -148,8 +148,8 @@ caching_process: process (HCLK) begin
 end process;
 
 
-Image_process: process (HCLK450) begin
-    if rising_edge(HCLK450) then
+Image_process: process (CLK_MAIN) begin
+    if rising_edge(CLK_MAIN) then
         if unsigned(readreg)=WIDTH*fetchBlock then -- replace fetchBlock with height if fetchBlock concept is removed
             doneFetch <='1';
         end if;
@@ -196,8 +196,8 @@ Image_process: process (HCLK450) begin
     end if;
 end process;
 
-SSD_calc_process: process (HCLK450) begin
-    if rising_edge(HCLK450) then
+SSD_calc_process: process (CLK_MAIN) begin
+    if rising_edge(CLK_MAIN) then
         SSD_calc<='0';
         if (offsetping='1') then
             ssd <= ssd + std_logic_vector

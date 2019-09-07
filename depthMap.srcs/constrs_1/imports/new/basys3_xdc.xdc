@@ -49,17 +49,17 @@ set_property PACKAGE_PIN L1 [get_ports {config_finished_r}]
 ##Buttons
 #set_property PACKAGE_PIN U18 [get_ports btnc]						
 #	set_property IOSTANDARD LVCMOS33 [get_ports btnc]
-#set_property PACKAGE_PIN W19 [get_ports btnl]                        
-#     set_property IOSTANDARD LVCMOS33 [get_ports btnl]
-#set_property PACKAGE_PIN T17 [get_ports btnr]						
-#         set_property IOSTANDARD LVCMOS33 [get_ports btnr]
+set_property PACKAGE_PIN W19 [get_ports btnl]                        
+     set_property IOSTANDARD LVCMOS33 [get_ports btnl]
+set_property PACKAGE_PIN T17 [get_ports btnr]						
+         set_property IOSTANDARD LVCMOS33 [get_ports btnr]
          
 set_property PACKAGE_PIN V17 [get_ports {btnc}]					
 	set_property IOSTANDARD LVCMOS33 [get_ports {btnc}]
-set_property PACKAGE_PIN V16 [get_ports {btnl}]					
-	set_property IOSTANDARD LVCMOS33 [get_ports {btnl}]
-set_property PACKAGE_PIN W16 [get_ports {btnr}]					
-	set_property IOSTANDARD LVCMOS33 [get_ports {btnr}]
+#set_property PACKAGE_PIN V16 [get_ports {btnl}]					
+#	set_property IOSTANDARD LVCMOS33 [get_ports {btnl}]
+#set_property PACKAGE_PIN W16 [get_ports {btnr}]					
+#	set_property IOSTANDARD LVCMOS33 [get_ports {btnr}]
 
 ## OV7670 Camera header pins
 
