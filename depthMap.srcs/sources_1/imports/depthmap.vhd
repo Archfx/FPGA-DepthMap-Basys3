@@ -295,29 +295,29 @@ begin
 		o   => resend
 	);
 	
-	Inst_debounce_plus: debounce PORT MAP(
-		clk => CLK_MAIN,
-		i   => btnr,
-		o   => plus_deb
-	);
+--	Inst_debounce_plus: debounce PORT MAP(
+--		clk => CLK_MAIN,
+--		i   => btnr,
+--		o   => plus_deb
+--	);
 	
-	Inst_debounce_minus: debounce PORT MAP(
-		clk => CLK_MAIN,
-		i   => btnl,
-		o   => minus_deb
-	);
+--	Inst_debounce_minus: debounce PORT MAP(
+--		clk => CLK_MAIN,
+--		i   => btnl,
+--		o   => minus_deb
+--	);
 	
-	Inst_debounce_plus_col: debounce PORT MAP(
-		clk => CLK_MAIN,
-		i   => btnp,
-		o   => plus_col_deb
-	);
+--	Inst_debounce_plus_col: debounce PORT MAP(
+--		clk => CLK_MAIN,
+--		i   => btnp,
+--		o   => plus_col_deb
+--	);
 	
-	Inst_debounce_minus_col: debounce PORT MAP(
-		clk => CLK_MAIN,
-		i   => btnm,
-		o   => minus_col_deb
-	);
+--	Inst_debounce_minus_col: debounce PORT MAP(
+--		clk => CLK_MAIN,
+--		i   => btnm,
+--		o   => minus_col_deb
+--	);
 
 	Inst_ov7670_controller_left: ov7670_controller_left PORT MAP(
 		clk             => clk_camera,
@@ -455,8 +455,8 @@ begin
 	
 	Inst_rectification: Image_Rectification PORT MAP(
 		address_in => left_right_addr,
-		plus =>plus_deb,
-        minus => minus_deb,
+		plus =>btnr,--plus_deb,
+        minus => btnl,--minus_deb,
         plus_col=>btnp,
         minus_col =>btnm,
         CLK => clk_camera,

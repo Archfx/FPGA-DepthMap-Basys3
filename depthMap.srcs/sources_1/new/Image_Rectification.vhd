@@ -48,7 +48,7 @@ end Image_Rectification;
 architecture Behavioral of Image_Rectification is
 
 signal adjust: STD_LOGIC_VECTOR (3 downto 0) := "1000";
-signal adjust_exposure: STD_LOGIC_VECTOR (15 downto 0) := x"ffff";
+signal adjust_exposure: STD_LOGIC_VECTOR (15 downto 0) := (others =>'0');
 
 signal counter: STD_LOGIC_VECTOR (15 downto 0);
 
@@ -71,7 +71,6 @@ caliberate_alignment_process: process (CLK) begin
 end process;
 caliberate_exposure_process: process (CLK) begin
     if rising_edge(CLK) then
-        counter <= counter + '1';
         if plus_col = '1' and counter = x"ffff" then
             adjust_exposure <= adjust_exposure + '1';
         end if;
