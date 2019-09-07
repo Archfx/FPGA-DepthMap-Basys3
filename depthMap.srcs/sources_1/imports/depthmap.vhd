@@ -16,6 +16,8 @@ entity DepthMap is
            btnl            : in  STD_LOGIC;
            btnc            : in  STD_LOGIC;
            btnr            : in  STD_LOGIC;
+           btnp            : in  STD_LOGIC;
+           btnm            : in  STD_LOGIC;
            config_finished_l : out STD_LOGIC;
            config_finished_r : out STD_LOGIC;
            
@@ -136,16 +138,7 @@ COMPONENT disparity_ram
 		avg_en : in	STD_LOGIC
 		);
 	END COMPONENT;
-
---	component clocking
---	port (
---    CLK_100         : in     std_logic;
---    -- Clock out ports
---    CLK_50          : out    std_logic;
---    CLK_25          : out    std_logic);
---	end component;
-	
-	
+		
     component Clocks 
     port (
     clk_in1         : in std_logic;
@@ -180,19 +173,19 @@ COMPONENT disparity_ram
         address_in 	: in STD_LOGIC_VECTOR (16 downto 0);
         plus : in  STD_LOGIC;
         minus : in  STD_LOGIC;
+        plus_col : in  STD_LOGIC;
+        minus_col : in  STD_LOGIC;
         CLK : in  STD_LOGIC;
+        left_in      : in  STD_LOGIC_vector(3 downto 0);
+	    right_in     : in  STD_LOGIC_vector(3 downto 0);
+	    left_out      : out  STD_LOGIC_vector(3 downto 0);
+	    right_out     : out  STD_LOGIC_vector(3 downto 0);
         address_left 	: out STD_LOGIC_VECTOR (16 downto 0);
         address_right 	: out STD_LOGIC_VECTOR (16 downto 0));
 	END COMPONENT;
 	
 	COMPONENT disparity_generator
 	PORT(
---		CLK25       : IN  std_logic;
---      rez_160x120 : IN std_logic;
---      rez_320x240 : IN std_logic;
---		enable      : IN  std_logic;       
---      vsync       : in  STD_LOGIC;
---		address     : OUT std_logic_vector(16 downto 0);
 		CLK_MAIN         : in  STD_LOGIC;
 		HCLK         :    IN  std_logic;
 --		HRESETn       : IN  std_logic;
@@ -228,12 +221,15 @@ COMPONENT disparity_ram
    signal wrdata_r     : std_logic_vector(11 downto 0);
    
    signal rdaddress_l  : std_logic_vector(16 downto 0);
-   signal rddata_l     : std_logic_vector(3 downto 0);
+   signal rddata_l,left_out     : std_logic_vector(3 downto 0);
    signal rdaddress_r  : std_logic_vector(16 downto 0);
-   signal rddata_r     : std_logic_vector(3 downto 0);
+   signal rddata_r,right_out     : std_logic_vector(3 downto 0);
    signal avg_out     : std_logic_vector(3 downto 0);
    signal din_avg     : std_logic_vector(3 downto 0);
    signal avg_en : std_logic;
+   
+   signal plus_deb,plus_col_deb : std_logic;
+   signal minus_deb,minus_col_deb : std_logic;
    
    signal disparity_out : std_logic_vector(7 downto 0);
    signal rdaddress_disp : std_logic_vector(16 downto 0);
@@ -282,9 +278,33 @@ begin
 	);
 
 	Inst_debounce: debounce PORT MAP(
-		clk => clk_vga,
+		clk => CLK_MAIN,
 		i   => btnc,
 		o   => resend
+	);
+	
+	Inst_debounce_plus: debounce PORT MAP(
+		clk => CLK_MAIN,
+		i   => btnr,
+		o   => plus_deb
+	);
+	
+	Inst_debounce_minus: debounce PORT MAP(
+		clk => CLK_MAIN,
+		i   => btnl,
+		o   => minus_deb
+	);
+	
+	Inst_debounce_plus_col: debounce PORT MAP(
+		clk => CLK_MAIN,
+		i   => btnp,
+		o   => plus_col_deb
+	);
+	
+	Inst_debounce_minus_col: debounce PORT MAP(
+		clk => CLK_MAIN,
+		i   => btnm,
+		o   => minus_col_deb
 	);
 
 	Inst_ov7670_controller_left: ov7670_controller PORT MAP(
@@ -422,9 +442,15 @@ begin
 	
 	Inst_rectification: Image_Rectification PORT MAP(
 		address_in => left_right_addr,
-		plus => btnr,
-        minus => btnl,
+		plus =>plus_deb,
+        minus => minus_deb,
+        plus_col=>btnp,
+        minus_col =>btnm,
         CLK => clk_camera,
+        left_in =>rddata_l,
+        right_in =>rddata_r,
+        left_out =>left_out,
+        right_out =>right_out,
 		address_left => address_left,
 		address_right => address_right
 	);
@@ -433,8 +459,8 @@ begin
 	Inst_disparity_generator: disparity_generator PORT MAP(
 		HCLK=> clk_camera,--CLK100,
 		CLK_MAIN=>CLK_MAIN,
-		left_in      => rddata_l,
-		right_in     => rddata_r,
+		left_in      => left_out,
+		right_in     => right_out,
 		avg_out     => avg_out,
 		dOUT         => disparity_out,
 		dOUT_addr => wr_address_disp,

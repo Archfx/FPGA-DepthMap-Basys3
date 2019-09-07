@@ -37,29 +37,53 @@ entity Image_Rectification is
   Port (address_in 	: in STD_LOGIC_VECTOR (16 downto 0);
         plus : in  STD_LOGIC;
         minus : in  STD_LOGIC;
+        plus_col : in  STD_LOGIC;
+        minus_col : in  STD_LOGIC;
         CLK : in  STD_LOGIC;
+        left_in      : in  STD_LOGIC_vector(3 downto 0);
+	    right_in     : in  STD_LOGIC_vector(3 downto 0);
+	    left_out      : out  STD_LOGIC_vector(3 downto 0);
+	    right_out     : out  STD_LOGIC_vector(3 downto 0);
         address_left 	: out STD_LOGIC_VECTOR (16 downto 0);
         address_right 	: out STD_LOGIC_VECTOR (16 downto 0));
 end Image_Rectification;
 
 architecture Behavioral of Image_Rectification is
 
-signal adjust: STD_LOGIC_VECTOR (3 downto 0) := "0111";
-signal counter: STD_LOGIC_VECTOR (14 downto 0);
+signal adjust: STD_LOGIC_VECTOR (3 downto 0) := "1000";
+signal adjust_exposure: STD_LOGIC_VECTOR (3 downto 0) := "0000";
+
+signal counter: STD_LOGIC_VECTOR (15 downto 0);
 
 begin
 address_left <= address_in;
 address_right <= std_logic_vector(unsigned(address_in) + (to_integer(unsigned(adjust))*320));
 
-caliberate_process: process (CLK) begin
+left_out <= left_in;
+right_out <= std_logic_vector(unsigned(right_in) + to_integer(unsigned(adjust_exposure)));
+
+caliberate_alignment_process: process (CLK) begin
     if rising_edge(CLK) then
         counter <= counter + '1';
-        if plus = '1' and counter = x"7fff" then
+        if plus = '1' and counter = x"ffff" then
             adjust <= adjust + '1';
         end if;
-        if minus = '1' and counter = x"7fff" then
+        if minus = '1' and counter = x"ffff" then
             adjust <= adjust - '1';
         end if;      
     end if;
 end process;
+caliberate_exposure_process: process (CLK) begin
+    if rising_edge(CLK) then
+        counter <= counter + '1';
+        if plus_col = '1' and counter = x"ffff" then
+            adjust_exposure <= adjust_exposure + '1';
+        end if;
+        if minus_col = '1' and counter = x"ffff" then
+            adjust_exposure <= adjust_exposure - '1';
+        end if;      
+    end if;
+end process;
+
+
 end Behavioral;

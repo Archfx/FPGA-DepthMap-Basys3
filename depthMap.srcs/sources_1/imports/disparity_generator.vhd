@@ -37,8 +37,8 @@ entity disparity_generator is
 generic (window:positive:=5;
          WIDTH:positive:=320;
          HEIGHT:positive:=240;
-         maxoffset:positive:=80; --Maximum extent where to look for the same pixel
-         minoffset:positive:=20;  ----minimum extent where to look for the same pixel
+         maxoffset:positive:=60; --Maximum extent where to look for the same pixel
+         minoffset:positive:=1;  ----minimum extent where to look for the same pixel
          fetchBlock:positive:=15); 
   Port (
     HCLK         : in  STD_LOGIC;
