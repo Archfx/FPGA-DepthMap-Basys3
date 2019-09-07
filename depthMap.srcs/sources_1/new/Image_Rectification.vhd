@@ -40,10 +40,7 @@ entity Image_Rectification is
         plus_col : in  STD_LOGIC;
         minus_col : in  STD_LOGIC;
         CLK : in  STD_LOGIC;
-        left_in      : in  STD_LOGIC_vector(3 downto 0);
-	    right_in     : in  STD_LOGIC_vector(3 downto 0);
-	    left_out      : out  STD_LOGIC_vector(3 downto 0);
-	    right_out     : out  STD_LOGIC_vector(3 downto 0);
+	    exposure       : out STD_LOGIC_VECTOR (15 downto 0);
         address_left 	: out STD_LOGIC_VECTOR (16 downto 0);
         address_right 	: out STD_LOGIC_VECTOR (16 downto 0));
 end Image_Rectification;
@@ -51,7 +48,7 @@ end Image_Rectification;
 architecture Behavioral of Image_Rectification is
 
 signal adjust: STD_LOGIC_VECTOR (3 downto 0) := "1000";
-signal adjust_exposure: STD_LOGIC_VECTOR (3 downto 0) := "0000";
+signal adjust_exposure: STD_LOGIC_VECTOR (15 downto 0) := x"ffff";
 
 signal counter: STD_LOGIC_VECTOR (15 downto 0);
 
@@ -59,8 +56,7 @@ begin
 address_left <= address_in;
 address_right <= std_logic_vector(unsigned(address_in) + (to_integer(unsigned(adjust))*320));
 
-left_out <= left_in;
-right_out <= std_logic_vector(unsigned(right_in) + to_integer(unsigned(adjust_exposure)));
+exposure<=adjust_exposure;
 
 caliberate_alignment_process: process (CLK) begin
     if rising_edge(CLK) then

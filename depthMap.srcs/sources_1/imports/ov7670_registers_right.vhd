@@ -9,20 +9,27 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity ov7670_registers is
+entity ov7670_registers_right is
     Port ( clk      : in  STD_LOGIC;
            resend   : in  STD_LOGIC;
            advance  : in  STD_LOGIC;
+           exposure : in STD_LOGIC_VECTOR (15 downto 0);
            command  : out  std_logic_vector(15 downto 0);
            finished : out  STD_LOGIC);
-end ov7670_registers;
+end ov7670_registers_right;
 
-architecture Behavioral of ov7670_registers is
+architecture Behavioral of ov7670_registers_right is
 	signal sreg   : std_logic_vector(15 downto 0);
 	signal address : std_logic_vector(7 downto 0) := (others => '0');
+	signal AECH   : std_logic_vector(7 downto 0);
+	signal AECHH   : std_logic_vector(5 downto 0);
+	signal COM1   : std_logic_vector(1 downto 0);
 begin
 	command <= sreg;
 	with sreg select finished  <= '1' when x"FFFF", '0' when others;
+	AECHH <= exposure(15 downto 10);
+	AECH <= exposure(9 downto 2);
+	COM1 <= exposure(1 downto 0);
 	
 	process(clk)
 	begin
@@ -42,7 +49,7 @@ begin
 				when x"05" => sreg <= x"3E00"; -- COM14  PCLK scaling off
 				
    			when x"06" => sreg <= x"8C00"; -- RGB444 Set RGB format
-   			when x"07" => sreg <= x"0400"; -- COM1   no CCIR601
+   			when x"07" => sreg <= "010000" & COM1 ; -- COM1   no CCIR601
  				when x"08" => sreg <= x"4010"; -- COM15  Full 0-255 output, RGB 565
 				when x"09" => sreg <= x"3a04"; -- TSLB   Set UV ordering,  do not auto-reset window
 				when x"0A" => sreg <= x"1438"; -- COM9  - AGC Celling
@@ -110,6 +117,9 @@ begin
             when x"37" => sreg <= x"b80a";
             when x"38" => sreg <= x"138f";--x"138e"; -- COM8 - AGC switched off 138f for default, White balance
             when x"39" => sreg <= x"4200"; -- COM17 - Color bar removed
+            when x"40" => sreg <= x"10" & AECH;
+            when x"41" => sreg <= "011100" & AECHH;
+
 --				when x"10" => sreg <= x"703a"; -- SCALING_XSC
 --				when x"11" => sreg <= x"7135"; -- SCALING_YSC
 --				when x"12" => sreg <= x"7200"; -- SCALING_DCWCTR  -- zzz was 11 

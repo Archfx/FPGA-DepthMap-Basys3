@@ -8,7 +8,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity ov7670_controller is
+entity ov7670_controller_left is
     Port ( clk   : in    STD_LOGIC;
 			  resend :in    STD_LOGIC;
 			  config_finished : out std_logic;
@@ -18,10 +18,10 @@ entity ov7670_controller is
            pwdn  : out   STD_LOGIC;
 			  xclk  : out   STD_LOGIC
 );
-end ov7670_controller;
+end ov7670_controller_left;
 
-architecture Behavioral of ov7670_controller is
-	COMPONENT ov7670_registers
+architecture Behavioral of ov7670_controller_left is
+	COMPONENT ov7670_registers_left
 	PORT(
 		clk      : IN std_logic;
 		advance  : IN std_logic;          
@@ -70,7 +70,7 @@ begin
 	pwdn  <= '0'; 						-- Power device up
 	xclk  <= sys_clk;
 	
-	Inst_ov7670_registers: ov7670_registers PORT MAP(
+	Inst_ov7670_registers_left: ov7670_registers_left PORT MAP(
 		clk      => clk,
 		advance  => taken,
 		command  => command,

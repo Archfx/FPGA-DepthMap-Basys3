@@ -66,10 +66,24 @@ architecture Behavioral of DepthMap is
 		);
 	END COMPONENT;
 
-	COMPONENT ov7670_controller
+	COMPONENT ov7670_controller_left
 	PORT(
 		clk : IN std_logic;
 		resend : IN std_logic;    
+		siod : INOUT std_logic;      
+		config_finished : OUT std_logic;
+		sioc : OUT std_logic;
+		reset : OUT std_logic;
+		pwdn : OUT std_logic;
+		xclk : OUT std_logic
+		);
+	END COMPONENT;
+	
+	COMPONENT ov7670_controller_right
+	PORT(
+		clk : IN std_logic;
+		resend : IN std_logic;
+		exposure : in STD_LOGIC_VECTOR (15 downto 0);    
 		siod : INOUT std_logic;      
 		config_finished : OUT std_logic;
 		sioc : OUT std_logic;
@@ -176,10 +190,7 @@ COMPONENT disparity_ram
         plus_col : in  STD_LOGIC;
         minus_col : in  STD_LOGIC;
         CLK : in  STD_LOGIC;
-        left_in      : in  STD_LOGIC_vector(3 downto 0);
-	    right_in     : in  STD_LOGIC_vector(3 downto 0);
-	    left_out      : out  STD_LOGIC_vector(3 downto 0);
-	    right_out     : out  STD_LOGIC_vector(3 downto 0);
+        exposure : out STD_LOGIC_VECTOR (15 downto 0);
         address_left 	: out STD_LOGIC_VECTOR (16 downto 0);
         address_right 	: out STD_LOGIC_VECTOR (16 downto 0));
 	END COMPONENT;
@@ -221,13 +232,14 @@ COMPONENT disparity_ram
    signal wrdata_r     : std_logic_vector(11 downto 0);
    
    signal rdaddress_l  : std_logic_vector(16 downto 0);
-   signal rddata_l,left_out     : std_logic_vector(3 downto 0);
+   signal rddata_l    : std_logic_vector(3 downto 0);
    signal rdaddress_r  : std_logic_vector(16 downto 0);
-   signal rddata_r,right_out     : std_logic_vector(3 downto 0);
+   signal rddata_r     : std_logic_vector(3 downto 0);
    signal avg_out     : std_logic_vector(3 downto 0);
    signal din_avg     : std_logic_vector(3 downto 0);
-   signal avg_en : std_logic;
+   signal avg_en : std_logic; 
    
+   signal exposure  : std_logic_vector(15 downto 0);
    signal plus_deb,plus_col_deb : std_logic;
    signal minus_deb,minus_col_deb : std_logic;
    
@@ -307,7 +319,7 @@ begin
 		o   => minus_col_deb
 	);
 
-	Inst_ov7670_controller_left: ov7670_controller PORT MAP(
+	Inst_ov7670_controller_left: ov7670_controller_left PORT MAP(
 		clk             => clk_camera,
 		resend          => resend,
 		config_finished => config_finished_l,
@@ -318,9 +330,10 @@ begin
 		xclk            => ov7670_xclk_l
 	);
 	
-	Inst_ov7670_controller_right: ov7670_controller PORT MAP(
+	Inst_ov7670_controller_right: ov7670_controller_right PORT MAP(
 		clk             => clk_camera,
 		resend          => resend,
+		exposure => exposure,
 		config_finished => config_finished_r,
 		sioc            => ov7670_sioc_r,
 		siod            => ov7670_siod_r,
@@ -447,10 +460,7 @@ begin
         plus_col=>btnp,
         minus_col =>btnm,
         CLK => clk_camera,
-        left_in =>rddata_l,
-        right_in =>rddata_r,
-        left_out =>left_out,
-        right_out =>right_out,
+        exposure => exposure,
 		address_left => address_left,
 		address_right => address_right
 	);
@@ -459,8 +469,8 @@ begin
 	Inst_disparity_generator: disparity_generator PORT MAP(
 		HCLK=> clk_camera,--CLK100,
 		CLK_MAIN=>CLK_MAIN,
-		left_in      => left_out,
-		right_in     => right_out,
+		left_in      => rddata_l,
+		right_in     => rddata_r,
 		avg_out     => avg_out,
 		dOUT         => disparity_out,
 		dOUT_addr => wr_address_disp,
