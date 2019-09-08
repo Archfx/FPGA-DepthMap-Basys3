@@ -20,9 +20,16 @@ end ov7670_registers_left;
 architecture Behavioral of ov7670_registers_left is
 	signal sreg   : std_logic_vector(15 downto 0);
 	signal address : std_logic_vector(7 downto 0) := (others => '0');
+	signal AECH   : std_logic_vector(7 downto 0);
+	signal AECHH   : std_logic_vector(5 downto 0);
+	signal COM1   : std_logic_vector(1 downto 0);
+	
 begin
 	command <= sreg;
 	with sreg select finished  <= '1' when x"FFFF", '0' when others;
+	AECHH <= "000000";--exposure(15 downto 10);
+	AECH <= "11110000";--exposure(9 downto 2); --8 was higher 1111 was too much
+	COM1 <= (others => '0');--exposure(1 downto 0);
 	
 	process(clk)
 	begin
@@ -42,7 +49,7 @@ begin
 				when x"05" => sreg <= x"3E00"; -- COM14  PCLK scaling off
 				
    			when x"06" => sreg <= x"8C00"; -- RGB444 Set RGB format
-   			when x"07" => sreg <= x"0400"; -- COM1   no CCIR601
+   			when x"07" => sreg <= "01000000000000" & COM1 ; -- COM1   no CCIR601
  				when x"08" => sreg <= x"4010"; -- COM15  Full 0-255 output, RGB 565
 				when x"09" => sreg <= x"3a04"; -- TSLB   Set UV ordering,  do not auto-reset window
 				when x"0A" => sreg <= x"1438"; -- COM9  - AGC Celling
@@ -108,8 +115,10 @@ begin
                                   
             when x"36" => sreg <= x"b382";
             when x"37" => sreg <= x"b80a";
-            when x"38" => sreg <= x"138e";--x"138f"; -- COM8 - AGC switched off 138f for default, White balance
+            when x"38" => sreg <= x"138f";--x"138f"; -- COM8 - AGC switched off 138f for default, White balance
             when x"39" => sreg <= x"4200"; -- COM17 - Color bar removed
+            when x"3A" => sreg <= x"10" & AECH;
+            when x"3B" => sreg <= "0111000000" & AECHH;
 --				when x"10" => sreg <= x"703a"; -- SCALING_XSC
 --				when x"11" => sreg <= x"7135"; -- SCALING_YSC
 --				when x"12" => sreg <= x"7200"; -- SCALING_DCWCTR  -- zzz was 11 

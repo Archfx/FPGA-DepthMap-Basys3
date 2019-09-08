@@ -56,7 +56,7 @@ end disparity_generator;
 
 architecture Behavioral of disparity_generator is
 
-type CacheArray is array(0 to WIDTH*fetchBlock-1) of std_logic_vector(3 downto 0);
+type CacheArray is array(0 to WIDTH*fetchBlock+1) of std_logic_vector(3 downto 0);
 signal org_L : CacheArray; --temporary storage for Left image
 signal org_R : CacheArray; --temporary storage for Right image
 
@@ -80,39 +80,39 @@ begin
 
 with cacheManager select 
     left_right_addr <= readreg when "0000",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock, readreg'length)) when "0001",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*2, readreg'length))   when "0010",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*3, readreg'length))   when "0011",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*4, readreg'length)) when "0100",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*5, readreg'length))   when "0101",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*6, readreg'length))   when "0110",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*7, readreg'length)) when "0111",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*8, readreg'length))   when "1000",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*9, readreg'length))   when "1001",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*10, readreg'length)) when "1010",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*11, readreg'length))   when "1011",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*12, readreg'length))   when "1100",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*13, readreg'length))   when "1101",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*14, readreg'length))   when "1110",
-                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*15, readreg'length))   when "1111";
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock-WIDTH, readreg'length)) when "0001",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*2-WIDTH, readreg'length))   when "0010",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*3-WIDTH, readreg'length))   when "0011",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*4-WIDTH, readreg'length)) when "0100",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*5-WIDTH, readreg'length))   when "0101",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*6-WIDTH, readreg'length))   when "0110",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*7-WIDTH, readreg'length)) when "0111",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*8-WIDTH, readreg'length))   when "1000",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*9-WIDTH, readreg'length))   when "1001",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*10-WIDTH, readreg'length)) when "1010",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*11-WIDTH, readreg'length))   when "1011",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*12-WIDTH, readreg'length))   when "1100",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*13-WIDTH, readreg'length))   when "1101",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*14-WIDTH, readreg'length))   when "1110",
+                readreg + std_logic_vector(to_unsigned(WIDTH*fetchBlock*15-WIDTH, readreg'length))   when "1111";
 
 with cacheManager select 
-    dOUT_addr <= std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) when "000",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock, dOUT_addr'length)) when "0001",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*2, dOUT_addr'length))   when "0010",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*3, dOUT_addr'length))   when "0011",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*4, dOUT_addr'length)) when "0100",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*5, dOUT_addr'length))   when "0101",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*6, dOUT_addr'length))   when "0110",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*7, dOUT_addr'length)) when "0111",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*8, dOUT_addr'length))   when "1000",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*9, dOUT_addr'length))   when "1001",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*10, dOUT_addr'length)) when "1010",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*11, dOUT_addr'length))   when "1011",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*12, dOUT_addr'length))   when "1100",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*13, dOUT_addr'length))   when "1101",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*14, dOUT_addr'length))   when "1110",
-                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*15, dOUT_addr'length))   when "1111";
+    dOUT_addr <= std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) when "000",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock, dOUT_addr'length))  when "0001",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*2, dOUT_addr'length))   when "0010",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*3, dOUT_addr'length))   when "0011",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*4, dOUT_addr'length)) when "0100",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*5, dOUT_addr'length))   when "0101",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*6, dOUT_addr'length))   when "0110",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*7, dOUT_addr'length)) when "0111",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*8, dOUT_addr'length))   when "1000",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*9, dOUT_addr'length))   when "1001",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*10, dOUT_addr'length)) when "1010",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*11, dOUT_addr'length))   when "1011",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*12, dOUT_addr'length))   when "1100",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*13, dOUT_addr'length))   when "1101",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*14, dOUT_addr'length))   when "1110",
+                std_logic_vector(to_unsigned((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))-to_integer(unsigned(best_offset)), dOUT_addr'length)) + std_logic_vector(to_unsigned(WIDTH*fetchBlock*15, dOUT_addr'length))   when "1111";
 
 --with cacheManager select 
 --    left_right_addr <= readreg when "00",
@@ -135,7 +135,7 @@ avg_reg_en <= not doneFetch;
 caching_process: process (HCLK) begin
     if rising_edge(HCLK) then
         if doneFetch='0' then
-            if unsigned(readreg)<WIDTH*fetchBlock then -- replace fetchBlock with height if fetchBlock concept is removed
+            if unsigned(readreg)<WIDTH*fetchBlock+2*WIDTH then -- replace fetchBlock with height if fetchBlock concept is removed
                org_L(to_integer(unsigned(readreg)))<= left_in;
                org_R(to_integer(unsigned(readreg)))<= right_in;
                avg_out<=std_logic_vector(unsigned(left_in) + unsigned(right_in)/2);
@@ -154,7 +154,7 @@ Image_process: process (CLK_MAIN) begin
             doneFetch <='1';
         end if;
         if doneFetch='1' then
-            if unsigned(data_count)<WIDTH*fetchBlock then -- replace fetchBlock with height if fetchBlock concept is removed                  
+            if unsigned(data_count)<WIDTH*fetchBlock+WIDTH then -- replace fetchBlock with height if fetchBlock concept is removed                  
                 if (offsetfound='1') then
                     if(col = WIDTH - 1) then
                         col <= (others => '0');  	
@@ -186,9 +186,9 @@ Image_process: process (CLK_MAIN) begin
 --                end if;         
             else
                 cacheManager<=cacheManager+"1"; --Comment this if remove fetchBlock concept
-                data_count <= (others => '0');
+                data_count <= std_logic_vector(to_unsigned(WIDTH,data_count'length));
                 doneFetch <='0';
-                row<=(others => '0');
+                row<=std_logic_vector(to_unsigned(1,row'length));
             end if;
            
         end if;
@@ -200,8 +200,7 @@ SSD_calc_process: process (CLK_MAIN) begin
     if rising_edge(CLK_MAIN) then
         SSD_calc<='0';
         if (offsetping='1') then
-            ssd <=  std_logic_vector
-                         (to_unsigned(
+            ssd <=  std_logic_vector(to_unsigned(
                         (to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))  -1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col))  -1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col))  -1 -to_integer(unsigned(offset))))))
                         +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 0 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 0   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 0 -to_integer(unsigned(offset))))))
                         +(to_integer(unsigned(org_L((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col)) + 1 - to_integer(unsigned(offset))))))*(to_integer(unsigned(org_L((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 1   )))-to_integer(unsigned(org_R((to_integer(unsigned(row))   -1 ) * WIDTH + to_integer(unsigned(col)) + 1 -to_integer(unsigned(offset))))))
@@ -226,7 +225,11 @@ Image_write_process: process (offsetfound,HCLK) begin
             wr_en<='1';
 --            dOUT<=std_logic_vector(to_unsigned(to_integer((unsigned(best_offset)-minoffset)*4),dOUT'length));
 --            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)),dOUT'length));
-            dOUT<=std_logic_vector(to_unsigned(to_integer((unsigned(best_offset))-minoffset)*(255/(maxoffset-minoffset)),dOUT'length));
+--            if to_integer(unsigned(best_offset)) > 10 then
+                dOUT<=(std_logic_vector(to_unsigned(to_integer((unsigned(best_offset))-minoffset)*(255/(maxoffset-minoffset)),dOUT'length)));
+--            else
+--                dOUT<= "00000000";
+--            end if;
 --        dOUT<=std_logic_vector(unsigned(org_L((to_integer(unsigned(row))) * WIDTH + to_integer(unsigned(col))))+unsigned(org_R((to_integer(unsigned(row))  -1 ) * WIDTH + to_integer(unsigned(col))))/2);
         else
             wr_en<='0';
