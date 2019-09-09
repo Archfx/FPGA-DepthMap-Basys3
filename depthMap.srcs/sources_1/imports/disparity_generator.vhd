@@ -226,7 +226,7 @@ Image_write_process: process (offsetfound,HCLK) begin
 --            dOUT<=std_logic_vector(to_unsigned(to_integer((unsigned(best_offset)-minoffset)*4),dOUT'length));
 --            dOUT<=std_logic_vector(to_unsigned(to_integer(unsigned(best_offset)),dOUT'length));
 --            if to_integer(unsigned(best_offset)) > 10 then
-                dOUT<=(std_logic_vector(to_unsigned(to_integer((unsigned(best_offset))-minoffset)*(255/(maxoffset-minoffset)),dOUT'length)));
+            dOUT<=(std_logic_vector(to_unsigned(to_integer((unsigned(best_offset))-minoffset)*(4),dOUT'length)));
 --            else
 --                dOUT<= "00000000";
 --            end if;

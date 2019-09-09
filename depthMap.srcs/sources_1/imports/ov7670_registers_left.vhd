@@ -28,7 +28,7 @@ begin
 	command <= sreg;
 	with sreg select finished  <= '1' when x"FFFF", '0' when others;
 	AECHH <= "000000";--exposure(15 downto 10);
-	AECH <= "11110000";--exposure(9 downto 2); --8 was higher 1111 was too much
+	AECH <= "11000000";--exposure(9 downto 2); --8 was higher 1111 was too much 11100000 too high
 	COM1 <= (others => '0');--exposure(1 downto 0);
 	
 	process(clk)
@@ -115,7 +115,7 @@ begin
                                   
             when x"36" => sreg <= x"b382";
             when x"37" => sreg <= x"b80a";
-            when x"38" => sreg <= x"138f";--x"138f"; -- COM8 - AGC switched off 138f for default, White balance
+            when x"38" => sreg <= x"138b";--x"138e"; -- COM8 - AGC switched off 138f for default, White balance
             when x"39" => sreg <= x"4200"; -- COM17 - Color bar removed
             when x"3A" => sreg <= x"10" & AECH;
             when x"3B" => sreg <= "0111000000" & AECHH;
