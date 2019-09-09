@@ -137,8 +137,8 @@ caching_process: process (HCLK) begin
         if doneFetch='0' then
             if unsigned(readreg)<WIDTH*fetchBlock+2*WIDTH then -- replace fetchBlock with height if fetchBlock concept is removed
                org_L(to_integer(unsigned(readreg)))<= left_in;
-               org_R(to_integer(unsigned(readreg)))<= right_in;
-               avg_out<=std_logic_vector(unsigned(left_in) + unsigned(right_in)/2);
+               org_R(to_integer(unsigned(readreg)))<= right_in-std_logic_vector(to_unsigned(2,4));
+               avg_out<=std_logic_vector(unsigned(left_in)/2 + unsigned(right_in-std_logic_vector(to_unsigned(2,4)))/2);
                readreg<=readreg+"1";
             else
                readreg <= (others => '0');  
