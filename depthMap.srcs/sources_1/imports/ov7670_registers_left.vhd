@@ -117,8 +117,8 @@ begin
             when x"37" => sreg <= x"b80a";
             when x"38" => sreg <= x"138e";--x"138e"; -- COM8 - AGC switched off 138f for default, White balance
             when x"39" => sreg <= x"4200"; -- COM17 - Color bar removed
-            when x"3A" => sreg <= x"10" & AECH;
-            when x"3B" => sreg <= "0111000000" & AECHH;
+--            when x"3A" => sreg <= x"10" & AECH;
+--            when x"3B" => sreg <= "0111000000" & AECHH;
 --				when x"10" => sreg <= x"703a"; -- SCALING_XSC
 --				when x"11" => sreg <= x"7135"; -- SCALING_YSC
 --				when x"12" => sreg <= x"7200"; -- SCALING_DCWCTR  -- zzz was 11 
