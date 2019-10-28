@@ -1,5 +1,5 @@
-set_property SRC_FILE_INFO {cfile:c:/Users/Aruna/Documents/Vivado/DepthMap_implementaion_basys3_320x240/depthMap.srcs/sources_1/ip/Clocks/Clocks.xdc rfile:../../../depthMap.srcs/sources_1/ip/Clocks/Clocks.xdc id:1 order:EARLY scoped_inst:Inst_ClockDev/inst} [current_design]
-set_property SRC_FILE_INFO {cfile:C:/Users/Aruna/Documents/Vivado/DepthMap_implementaion_basys3_320x240/depthMap.srcs/constrs_1/imports/new/basys3_xdc.xdc rfile:../../../depthMap.srcs/constrs_1/imports/new/basys3_xdc.xdc id:2} [current_design]
+set_property SRC_FILE_INFO {cfile:c:/Users/Aruna/Documents/Vivado/DepthMap_implementaion_basys3_320x240_With_UART/depthMap.srcs/sources_1/ip/Clocks/Clocks.xdc rfile:../../../depthMap.srcs/sources_1/ip/Clocks/Clocks.xdc id:1 order:EARLY scoped_inst:Inst_ClockDev/inst} [current_design]
+set_property SRC_FILE_INFO {cfile:C:/Users/Aruna/Documents/Vivado/DepthMap_implementaion_basys3_320x240_With_UART/depthMap.srcs/constrs_1/imports/new/basys3_xdc.xdc rfile:../../../depthMap.srcs/constrs_1/imports/new/basys3_xdc.xdc id:2} [current_design]
 current_instance Inst_ClockDev/inst
 set_property src_info {type:SCOPED_XDC file:1 line:57 export:INPUT save:INPUT read:READ} [current_design]
 set_input_jitter [get_clocks -of_objects [get_ports clk_in1]] 0.1
@@ -116,3 +116,5 @@ set_property src_info {type:XDC file:2 line:177 export:INPUT save:INPUT read:REA
 set_property PACKAGE_PIN M1 [get_ports ov7670_vsync_r]
 set_property src_info {type:XDC file:2 line:180 export:INPUT save:INPUT read:READ} [current_design]
 set_property PACKAGE_PIN N1 [get_ports ov7670_sioc_r]
+set_property src_info {type:XDC file:2 line:187 export:INPUT save:INPUT read:READ} [current_design]
+set_property PACKAGE_PIN A18 [get_ports TxD]

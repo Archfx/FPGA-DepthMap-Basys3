@@ -181,4 +181,10 @@ set_property PACKAGE_PIN N1 [get_ports ov7670_sioc_r]
 	set_property IOSTANDARD LVCMOS33 [get_ports ov7670_sioc_r]
 
 
+##USB-RS232 Interface
+#set_property PACKAGE_PIN B18 [get_ports RxD]
+#set_property IOSTANDARD LVCMOS33 [get_ports RxD]
+set_property PACKAGE_PIN A18 [get_ports TxD]
+set_property IOSTANDARD LVCMOS33 [get_ports TxD]
 
+set_property BITSTREAM.STARTUP.STARTUPCLK JTAGCLK [current_design]

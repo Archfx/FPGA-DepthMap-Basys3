@@ -45,7 +45,9 @@ entity DepthMap is
            ov7670_sioc_r  : out STD_LOGIC;
            ov7670_siod_r  : inout STD_LOGIC;
            ov7670_pwdn_r  : out STD_LOGIC;
-           ov7670_reset_r : out STD_LOGIC
+           ov7670_reset_r : out STD_LOGIC;
+           
+           TxD : out STD_LOGIC
            );
 end DepthMap;
 
@@ -167,6 +169,16 @@ COMPONENT disparity_ram
 		inclk0 : IN std_logic;          
 		c0 : OUT std_logic;
 		c1 : OUT std_logic
+		);
+	END COMPONENT;
+	
+	COMPONENT Transmitter
+	PORT(
+		clk : IN std_logic;
+		reset : IN std_logic;
+		transmit : IN std_logic;           
+		data : IN STD_LOGIC_VECTOR (7 downto 0);
+		TxD : OUT std_logic
 		);
 	END COMPONENT;
 
@@ -408,7 +420,15 @@ begin
 		wea      => wr_en
 	);
 	
-
+	Inst_Transmitter: Transmitter PORT MAP(
+		clk   => CLK_MAIN,
+		reset  => '0',
+		transmit   => '1',
+		data => "10101011",
+		TxD      => TxD
+		
+	);
+	
 	Inst_ov7670_capture_l: ov7670_capture PORT MAP(
 		pclk  => ov7670_pclk_l,
         rez_160x120 => rez_160x120,
