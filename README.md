@@ -277,5 +277,6 @@ After caliberation of exposure in cameras individually and improving the Image r
   </p>
 </p>
 
+## Image rectification
 
-
+Due to the physical imperfections of camera mounts and the camera it self there can be horizontal (X) and Vertical (Y) alignment issues. You can rectify them by moving the image frames using push buttons on the FPGA. (BTNL & BTNR -> X | BTNU & BTND -> Y) 
