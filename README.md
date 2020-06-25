@@ -1,9 +1,6 @@
 
 # DepthMap generation on FPGA
-
-```diff
-- This project is still in Progress
-```
+[![DOI](https://zenodo.org/badge/202063958.svg)](https://zenodo.org/badge/latestdoi/202063958)
 
 
 Most of the image processing projects in academia has been done on higher-end FPGA's with a considerable amount of resources. The main objective of this project is to implement a reliable embedded system on a lower end FPGA with limited resources. This project is based on Disparity calculation based on SAD (Sum of Absolute Difference) algorithm and creating a depth map.
