@@ -4,6 +4,10 @@
 -- 
 -- Description: Register settings for the OV7670 Caamera (partially from OV7670.c
 --              in the Linux Kernel
+
+-- This file is borrowed from https://github.com/laurivosandi/hdl 
+-- MIT LICENSE can be found here for this file https://github.com/laurivosandi/hdl/blob/master/LICENSE
+
 ------------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
