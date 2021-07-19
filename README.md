@@ -6,7 +6,8 @@
 
 Jayasena, A., 2021. Register Transfer Level Disparity generator with Stereo Vision. Journal of Open Research Software, 9(1), p.18. DOI: http://doi.org/10.5334/jors.339
 
-'''Citation (bibtex) [Switch view]@article{Jayasena_2021,
+```
+Citation (bibtex) [Switch view]@article{Jayasena_2021,
 	doi = {10.5334/jors.339},
 	url = {https://doi.org/10.5334%2Fjors.339},
 	year = 2021,
@@ -15,7 +16,8 @@ Jayasena, A., 2021. Register Transfer Level Disparity generator with Stereo Visi
 	author = {Aruna Jayasena},
 	title = {Register Transfer Level Disparity generator with Stereo Vision},
 	journal = {Journal of Open Research Software}
-} '''
+} 
+```
 
 ## About
 
